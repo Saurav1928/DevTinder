@@ -1,30 +1,26 @@
 const express = require("express")
+const { connectDB } = require("./config/database")
 const app = express()
-app.use(
-  "/user",
-  (req, res, next) => {
-    console.log("Hello from 1st req handler")
-    // res.send("1st response!!")
-    next()
-    console.log("end of 1st")
-  },
- [ (req, res, next) => {
-    console.log("Hello from 2nd req handler")
-    // res.send("2nd response!!")
-    next()
-    console.log("end of 2nd")
-  },
-  (req, res, next) => {
-    console.log("Hello from 3rd req handler")
-    // res.send("3rd response!!")
-    next()
-    console.log("end of 3rd")
-  }],
-  (req, res, next) => {
-    console.log("Hello from 4th req handler")
-    res.send("4th response!!")
-    // next()
-    // console.log("end of 4th")
+const User= require("./models/user.model")
+
+app.post("/signup",async (req, res, next)=>{
+  const userObj={
+    firstName :"Rohan",
+    lastName:"Farkade",
+    emailId:"rohanfarkade@gmail.com",
+    password:"1234"
   }
-)
-app.listen(7000, console.log("App is running at http://localhost:7000 !!"))
+  // creating a new instance of User
+  const newUser= new User(userObj)
+  await newUser.save();
+  res.send("User is saved to DB!!!")
+})
+
+
+connectDB().then((result) => {
+  console.log("Successfully Connected to DB!!")
+  app.listen(7000, console.log("App is running at http://localhost:7000 !!"))
+}).catch((err) => {
+  console.log("Failed to connect to DB!!")
+});
+

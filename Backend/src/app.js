@@ -3,17 +3,25 @@ const { connectDB } = require("./config/database")
 const app = express()
 const User= require("./models/user.model")
 
+app.use(express.json())// without the path
+
 app.post("/signup",async (req, res, next)=>{
-  const userObj={
-    firstName :"Rohan",
-    lastName:"Farkade",
-    emailId:"rohanfarkade@gmail.com",
-    password:"1234"
-  }
-  // creating a new instance of User
-  const newUser= new User(userObj)
+  const newUser= req.body;
+  console.log(data)
+  // const userObj={
+  //   firstName :"Rohan",
+  //   lastName:"Farkade",
+  //   emailId:"rohanfarkade@gmail.com",
+  //   password:"1234"
+  // }
+  // // creating a new instance of User
+  try {
+    const newUser= new User(data)
   await newUser.save();
-  res.send("User is saved to DB!!!")
+  res.send(`User is saved to DB!!!`)
+  } catch (error) {
+    res.status(500).send("Error Saving User!")
+  }
 })
 
 

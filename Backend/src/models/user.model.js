@@ -5,7 +5,7 @@ const userSchema = new Schema(
   firstName: {
     type: String,
     required: true,
-    minLength:4,
+    minLength:[4, `Must be atleast of length 4`],
     maxLength:50
   },
   lastName: {
@@ -24,8 +24,8 @@ const userSchema = new Schema(
   },
   age: {
     type: Number,
-    min:18,
-    max:110
+    min:[18, `Must be atleast 18, got ${value}`],
+    max:[110, `Must be atmax 110, got ${value}`],
   },
   gender: {
     type: String,

@@ -16,9 +16,11 @@ app.post("/signup", async (req, res, next) => {
   // }
   // // creating a new instance of User
   try {
-    const existingUser = await User.findOne({ emailId: data.emailId });
+    const existingUser = await User.findOne({ emailId: data.emailId })
     if (existingUser) {
-      return res.status(400).send(`Email already exists. Please use another email.`);
+      return res
+        .status(400)
+        .send(`Email already exists. Please use another email.`)
     }
     const newUser = new User(data)
     await newUser.save()
@@ -44,35 +46,51 @@ app.get("/userByEmail", async (req, res) => {
 // feed api - get all users from DB
 app.get("/feed", async (req, res) => {
   try {
-    const users= await User.find({});
-    if(!users){
+    const users = await User.find({})
+    if (!users) {
       res.status(404).send("Users not found!!")
-    }
-    else
-    res.send(users) 
-
+    } else res.send(users)
   } catch (error) {
     res.status(400).send("Something went wrong!!")
   }
 })
-app.patch("/user", async (req, res)=>{
-  const data = req.body;
-  const userId= data.userId;
+app.patch("/user/", async (req, res) => {
+  const data = req.body
+  const userId = data.userId
+
   try {
-    const updatedUser= await User.findByIdAndUpdate(userId, data, {runValidators:true});
+    const ALLOWED_UPDATES = [
+      "skills",
+      "userId",
+      "photoUrl",
+      "gender",
+      "age",
+      "firstName",
+      "lastName",
+      "about",
+    ]
+    const isAllowedUpdates = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    ) // checking if every key sent in data is allowed or not..
+    if (!isAllowedUpdates) throw new Error("Updates Not Allowed!!")
+    if (data?.skills.length > 10)
+      throw new Error("Skills cannot be more than 10")
+    const updatedUser = await User.findByIdAndUpdate(userId, data, {
+      runValidators: true,
+    })
     res.send("User updated Successfully!")
   } catch (error) {
     res.status(400).send(`Error Updating User : ${error.message}`)
   }
 })
 
-app.delete("/user", async (req, res)=>{
-  const userId= req.body.userId;
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId
   try {
-    const user= await User.findByIdAndDelete(userId);
-    res.send("User Deleted Successfully!!");
+    const user = await User.findByIdAndDelete(userId)
+    res.send("User Deleted Successfully!!")
   } catch (error) {
- res.send("Error while deleting a user!!")   
+    res.send("Error while deleting a user!!")
   }
 })
 

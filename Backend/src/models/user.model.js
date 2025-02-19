@@ -24,8 +24,8 @@ const userSchema = new Schema(
   },
   age: {
     type: Number,
-    min:[18, `Must be atleast 18, got ${value}`],
-    max:[110, `Must be atmax 110, got ${value}`],
+    min:[18, `Must be atleast 18, got ${this.age}`],
+    max:[110, `Must be atmax 110, got ${this.age}`],
   },
   gender: {
     type: String,

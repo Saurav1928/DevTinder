@@ -54,14 +54,14 @@ app.get("/feed", async (req, res) => {
     res.status(400).send("Something went wrong!!")
   }
 })
-app.patch("/user/", async (req, res) => {
+app.patch("/user/:userId", async (req, res) => {
   const data = req.body
-  const userId = data.userId
+  const userId = req.params?.userId
 
   try {
+    // _id should not be updated.. so removing it from ALLOWED_UPDATES
     const ALLOWED_UPDATES = [
       "skills",
-      "userId",
       "photoUrl",
       "gender",
       "age",
@@ -73,8 +73,8 @@ app.patch("/user/", async (req, res) => {
       ALLOWED_UPDATES.includes(k)
     ) // checking if every key sent in data is allowed or not..
     if (!isAllowedUpdates) throw new Error("Updates Not Allowed!!")
-    if (data?.skills.length > 10)
-      throw new Error("Skills cannot be more than 10")
+    // if (data?.skills.length > 10)
+    //   throw new Error("Skills cannot be more than 10")
     const updatedUser = await User.findByIdAndUpdate(userId, data, {
       runValidators: true,
     })

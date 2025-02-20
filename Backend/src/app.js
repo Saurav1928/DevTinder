@@ -2,34 +2,63 @@ const express = require("express")
 const { connectDB } = require("./config/database")
 const app = express()
 const User = require("./models/user.model")
-
+const { validateSignUpData } = require("./utils/validation")
+const bcrypt = require("bcrypt")
+const validator =require("validator")
 app.use(express.json()) // without the path
 //  get all users from DB with matching email
 app.post("/signup", async (req, res, next) => {
-  const data = req.body
-  // console.log(newUser)
-  // const userObj={
-  //   firstName :"Rohan",
-  //   lastName:"Farkade",
-  //   emailId:"rohanfarkade@gmail.com",
-  //   password:"1234"
-  // }
-  // // creating a new instance of User
   try {
-    const existingUser = await User.findOne({ emailId: data.emailId })
-    if (existingUser) {
-      return res
-        .status(400)
-        .send(`Email already exists. Please use another email.`)
-    }
-    const newUser = new User(data)
-    await newUser.save()
-    res.send(`User is saved to DB!!!`)
+    //step 1: validate the data
+    validateSignUpData(req)
+    //step 2: encrypt the password
+    const { firstName, lastName, emailId, password } = req.body
+    const hashedPassword = await bcrypt.hash(password, 10)
+    // console.log(hashedPassword)
+    //step 3: creating a new instance and saving to DB
+    const newUser = new User({
+   firstName,
+      lastName,
+      emailId,
+      password: hashedPassword,
+    })
+   await newUser.save()
+   console.log("Hiii")
+    res.send("Signed Up Success!!")
   } catch (error) {
-    res.status(500).send(`Error Saving User! :  ${error.message}`)
+    res.status(500).send(`Error in User SignUp ! :  ${error.message}`)
   }
 })
 
+app.post("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+    console.log({emailId, password})
+    // Validate email format
+    if (!validator.isEmail(emailId)) {
+      throw new Error("Invalid Credentials...");
+    }
+
+    // Find user by emailId
+    const user = await User.findOne({ emailId: emailId });
+    if (!user) {
+      console.log("Invalid Email...")
+      throw new Error("Invalid Credentials...");
+    }
+
+    // Compare passwords
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (isPasswordCorrect) {
+      res.status(200).json({ message: "Login Success!!" });
+    } else {
+      console.log("Wrong Password")
+      throw new Error("Invalid Credentials...");
+    }
+  } catch (error) {
+    
+    res.status(400).json({ error:  error.message });
+  }
+});
 app.get("/userByEmail", async (req, res) => {
   try {
     const userEmail = req.body.emailId

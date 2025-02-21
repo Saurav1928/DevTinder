@@ -3,9 +3,13 @@ const { connectDB } = require("./config/database")
 const app = express()
 const User = require("./models/user.model")
 const { validateSignUpData } = require("./utils/validation")
-const bcrypt = require("bcrypt")
-const validator =require("validator")
+
+const validator = require("validator")
+const cookieParser = require("cookie-parser")
+const { userAuth } = require("./middlewares/auth")
+
 app.use(express.json()) // without the path
+app.use(cookieParser())
 //  get all users from DB with matching email
 app.post("/signup", async (req, res, next) => {
   try {
@@ -17,13 +21,13 @@ app.post("/signup", async (req, res, next) => {
     // console.log(hashedPassword)
     //step 3: creating a new instance and saving to DB
     const newUser = new User({
-   firstName,
+      firstName,
       lastName,
       emailId,
       password: hashedPassword,
     })
-   await newUser.save()
-   console.log("Hiii")
+    await newUser.save()
+    console.log("Hiii")
     res.send("Signed Up Success!!")
   } catch (error) {
     res.status(500).send(`Error in User SignUp ! :  ${error.message}`)
@@ -32,95 +36,46 @@ app.post("/signup", async (req, res, next) => {
 
 app.post("/login", async (req, res) => {
   try {
-    const { emailId, password } = req.body;
-    console.log({emailId, password})
+    const { emailId, password } = req.body
+    // console.log({ emailId, password })
     // Validate email format
     if (!validator.isEmail(emailId)) {
-      throw new Error("Invalid Credentials...");
+      throw new Error("Invalid Credentials...")
     }
-
     // Find user by emailId
-    const user = await User.findOne({ emailId: emailId });
+    const user = await User.findOne({ emailId: emailId })
     if (!user) {
-      console.log("Invalid Email...")
-      throw new Error("Invalid Credentials...");
+      // console.log("Invalid Email...")
+      throw new Error("Invalid Credentials...")
     }
-
     // Compare passwords
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await user.validatePassword(password);
     if (isPasswordCorrect) {
-      res.status(200).json({ message: "Login Success!!" });
+      // step1 : create a jwt (its not a bad, but a good practice is to create such jwt methods in schema)
+      const token = await user.getJWT();
+      // console.log(token)
+      // step2 : add a token to cookie and send the resposne back to the user
+      res.cookie("token", token)
+      res.status(200).json({ message: "Login Success!!" })
     } else {
-      console.log("Wrong Password")
-      throw new Error("Invalid Credentials...");
+      // console.log("Wrong Password")
+      throw new Error("Invalid Credentials...")
     }
   } catch (error) {
-    
-    res.status(400).json({ error:  error.message });
-  }
-});
-app.get("/userByEmail", async (req, res) => {
-  try {
-    const userEmail = req.body.emailId
-    const user = await User.find({ emailId: userEmail })
-    if (!user) {
-      res.status(404).send(`User with mail : ${userEmail} not found!!`)
-    } else {
-      res.send(user)
-    }
-  } catch (error) {
-    res.status(400).send("Something went wrong!!")
+    res.status(400).json({ error: error.message })
   }
 })
-// feed api - get all users from DB
-app.get("/feed", async (req, res) => {
+app.get("/profile",userAuth, async (req, res) => {
   try {
-    const users = await User.find({})
-    if (!users) {
-      res.status(404).send("Users not found!!")
-    } else res.send(users)
+    const loggedInUser = req.user
+    res.send(`Logged in user: ${loggedInUser}`)
   } catch (error) {
-    res.status(400).send("Something went wrong!!")
+    res.status(400).json({ error: error.message })
   }
 })
-app.patch("/user/:userId", async (req, res) => {
-  const data = req.body
-  const userId = req.params?.userId
-
-  try {
-    // _id should not be updated.. so removing it from ALLOWED_UPDATES
-    const ALLOWED_UPDATES = [
-      "skills",
-      "photoUrl",
-      "gender",
-      "age",
-      "firstName",
-      "lastName",
-      "about",
-    ]
-    const isAllowedUpdates = Object.keys(data).every((k) =>
-      ALLOWED_UPDATES.includes(k)
-    ) // checking if every key sent in data is allowed or not..
-    if (!isAllowedUpdates) throw new Error("Updates Not Allowed!!")
-    // if (data?.skills.length > 10)
-    //   throw new Error("Skills cannot be more than 10")
-    const updatedUser = await User.findByIdAndUpdate(userId, data, {
-      runValidators: true,
-    })
-    res.send("User updated Successfully!")
-  } catch (error) {
-    res.status(400).send(`Error Updating User : ${error.message}`)
-  }
-})
-
-app.delete("/user", async (req, res) => {
-  const userId = req.body.userId
-  try {
-    const user = await User.findByIdAndDelete(userId)
-    res.send("User Deleted Successfully!!")
-  } catch (error) {
-    res.send("Error while deleting a user!!")
-  }
+app.post("/sendConnectionRequest", userAuth, (req, res)=>{
+  console.log("Send a connection request!")
+  res.send(req.user.firstName + " sent a connection request....");
 })
 
 connectDB()

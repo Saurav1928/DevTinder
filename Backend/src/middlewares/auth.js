@@ -1,16 +1,19 @@
-const adminAuth=((req, res, next)=>{
-    const token="xyz";
-    const isAuthorised=token==="xyz";
-    if(!isAuthorised) res.status(401).send("Unauthorised Admin");
-    console.log("Admin Middlware called!!")
-    next();
-  })
-  const userAuth=((req, res, next)=>{
-    const token="xyz";
-    const isAuthorised=token==="xyz";
-    if(!isAuthorised) res.status(401).send("Unauthorised User");
-    console.log("User Middlware called!!")
-    next();
+const jwt = require("jsonwebtoken")
+const User= require("../models/user.model")
+  const userAuth=(async (req, res, next)=>{
+   try {
+    const {token}= req.cookies;
+    if(!token) throw new Error("Invalid Token!!")
+      const decodedData= await jwt.verify(token,"mySecret1234" );
+    // console.log(decodedData)
+    const {_id}= decodedData
+    const user= await User.findById(_id)
+    if(!user) throw new Error("User not found!!")
+      req.user= user
+      next();
+   } catch (error) {
+    res.status(400).send("ERROR: "+error.message)
+   }
   })
 
-  module.exports={adminAuth, userAuth}
+  module.exports={ userAuth}

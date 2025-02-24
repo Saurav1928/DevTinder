@@ -20,7 +20,7 @@ authRouter.post("/signup", async (req, res, next) => {
       password: hashedPassword,
     })
     await newUser.save()
-    console.log("Hiii")
+    // console.log("Hiii")
     res.send("Signed Up Success!!")
   } catch (error) {
     res.status(500).send(`Error in User SignUp ! :  ${error.message}`)

@@ -2,7 +2,6 @@ const express = require("express")
 const { connectDB } = require("./config/database")
 const app = express()
 const cookieParser = require("cookie-parser")
-const { userAuth } = require("./middlewares/auth")
 
 app.use(express.json()) // without the path
 app.use(cookieParser())
@@ -11,11 +10,12 @@ app.use(cookieParser())
 const authRouter = require("./routes/auth")
 const profileROuter = require("./routes/profile")
 const requestRouter = require("./routes/request")
+const { userRouter } = require("./routes/user")
 
 app.use("/", authRouter)
 app.use("/", profileROuter)
 app.use("/", requestRouter)
-
+app.use("/", userRouter)
 connectDB()
   .then(() => {
     console.log("Successfully Connected to DB!!")

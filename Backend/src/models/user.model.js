@@ -56,9 +56,9 @@ const userSchema = new Schema(
     skills: {
       type: [String],
       // we can have db level validations also and also API level as well
-      // validate(value){
-      //   if(value.length>10) throw new Error("Skills cannot be more than 10")
-      // }
+      validate(value) {
+        if (value.length > 10) throw new Error("Skills cannot be more than 10")
+      },
     },
     about: {
       type: String,

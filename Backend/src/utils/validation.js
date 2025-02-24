@@ -1,5 +1,6 @@
 const validator= require("validator")
-const validateSignUpData= (req)=>{
+const bcrypt = require("bcrypt")
+const validateSignUpData = (req) => {
   const { firstName, lastName, emailId, password } = req.body
   // console.log("Validating:", firstName, lastName, emailId, password);
   if (!firstName || !lastName) {
@@ -12,5 +13,44 @@ const validateSignUpData= (req)=>{
     throw new Error("Invalid Email!!")
   } else if (!validator.isStrongPassword(password))
     throw new Error("Password must be strong!!")
-};
-module.exports={validateSignUpData}
+}
+const validateEditData = (req) => {
+  const ALLOWED_EDIT_FIELDS = [
+    "firstName",
+    "lastName",
+    // "emailId",
+    "age",
+    "gender",
+    "photoUrl",
+    "about",
+    "skills",
+  ]
+  const isEditDataValid = Object.keys(req.body).every((field) =>
+    ALLOWED_EDIT_FIELDS.includes(field)
+  )
+  //   console.log("Hiii : ", isEditDataValid)
+
+  return isEditDataValid
+}
+
+const validateForgetPasswordData = async (req) => {
+  const hashedPasswordFromDatabase = req.user.password
+  const { oldPassword, newPassword } = req.body
+
+  // Check if old password is correct or not
+  const isForgetPasswordDataValid = await bcrypt.compare(
+    oldPassword,
+    hashedPasswordFromDatabase
+  )
+  if (!isForgetPasswordDataValid) throw new Error("Old password is wrong..")
+
+  // Check if new password is strong enough
+  if (!validator.isStrongPassword(newPassword))
+    throw new Error("New password must be strong...")
+}
+
+module.exports = {
+  validateSignUpData,
+  validateEditData,
+  validateForgetPasswordData,
+}

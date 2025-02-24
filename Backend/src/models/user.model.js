@@ -10,13 +10,14 @@ const userSchema = new Schema(
       required: true,
       minLength: [4, `Must be atleast of length 4`],
       maxLength: [30, `Must be atmost of length 30`],
+      // index: true,
     },
     lastName: {
       type: String,
     },
     emailId: {
       type: String,
-      unique: true,
+      unique: true, // as this field is unique, it automatically creates an index
       required: true,
       trim: true,
       lowercase: true,
@@ -68,6 +69,7 @@ const userSchema = new Schema(
   { timestamps: true }
 )
 
+userSchema.index({ firstName: 1, lastName: 1 })
 
 // DONT USE ARROW FUNCTION OVER HERE
 userSchema.methods.getJWT = async function () {

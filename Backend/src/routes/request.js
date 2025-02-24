@@ -24,7 +24,8 @@ requestRouter.post(
         $or: [
           { fromUserId: fromUserId, toUserId: toUserId },
           { fromUserId: toUserId, toUserId: fromUserId },
-        ],
+        ], // as we are finding by both id and hence we must have index on this field for faster searching...
+        // hence we can have compound index for this fields -> check connectionrequestModel
       })
       if (existingConnectionRequest)
         throw new Error(`You cant sent more than one request to same person..`)

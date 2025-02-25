@@ -1,20 +1,28 @@
 import React, { useState } from "react"
 import axios from "axios"
+import { addUser } from "../utils/userSlice"
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import BACKEND_URL from "../utils/constant"
 const Login = () => {
   const [emailId, setEmailId] = useState("akshay@gmail.com")
   const [password, setPassword] = useState("Akshay@1234")
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const handleLogin = async () => {
     try {
       console.log("Login clicked")
       const res = await axios.post(
-        "http://localhost:7000/login",
+        BACKEND_URL + "/login",
         {
           emailId,
           password,
         },
         { withCredentials: true } // also have to do it to set the cookies in browser
       )
-      console.log("Login Success : ", res)
+      console.log("Login Success : ", res.data)
+      dispatch(addUser(res.data))
+      return navigate("/")
     } catch (error) {
       console.log("Error while logging in : " + error.message)
     }

@@ -2,7 +2,15 @@ const express = require("express")
 const { userAuth } = require("../middlewares/auth")
 const ConnectionRequest = require("../models/connectionRequest.model")
 const userRouter = express.Router()
-const USER_SAFE_DATA = ["firstName", "lastName", "photoUrl", "about", "skills"]
+const USER_SAFE_DATA = [
+  "firstName",
+  "lastName",
+  "photoUrl",
+  "about",
+  "skills",
+  "gender",
+  "age",
+]
 const User = require("../models/user.model")
 // get all the received pending interested requests of loggedIn user
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {

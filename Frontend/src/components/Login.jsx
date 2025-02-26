@@ -11,7 +11,7 @@ const Login = () => {
   const navigate = useNavigate()
   const handleLogin = async () => {
     try {
-      console.log("Login clicked")
+      // console.log("Login clicked")
       const res = await axios.post(
         BACKEND_URL + "/login",
         {

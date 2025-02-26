@@ -9,7 +9,7 @@ const {
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user
-    res.send(`Logged in user: ${loggedInUser}`)
+    res.send(loggedInUser)
   } catch (error) {
     res.status(400).json({ error: error.message })
   }

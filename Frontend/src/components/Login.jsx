@@ -7,6 +7,7 @@ import BACKEND_URL from "../utils/constant"
 const Login = () => {
   const [emailId, setEmailId] = useState("akshay@gmail.com")
   const [password, setPassword] = useState("Akshay@1234")
+  const [error, setError] = useState("")
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleLogin = async () => {
@@ -24,7 +25,7 @@ const Login = () => {
       dispatch(addUser(res.data))
       return navigate("/")
     } catch (error) {
-      console.log("Error while logging in : " + error.message)
+      setError(error?.response?.data?.error)
     }
   }
   return (
@@ -76,6 +77,7 @@ const Login = () => {
               />
             </label>
           </div>
+          {error !== "" && <p className="text-red-500">Error : {error}</p>}
           <div className="card-actions justify-center">
             <button className="btn btn-primary" onClick={handleLogin}>
               Login

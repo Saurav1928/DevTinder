@@ -29,7 +29,7 @@ const Body = () => {
   return (
     <>
       <NavBar />
-      {/* Outlet is the place where child of Body will then render... */}
+      {/* NOTE : Outlet is the place where child of Body will then render... */}
       <Outlet />
       <Footer />
     </>

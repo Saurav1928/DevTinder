@@ -43,7 +43,7 @@ const userSchema = new Schema(
     gender: {
       type: String,
       enum: {
-        values: ["male", "female", "other"],
+        values: ["Male", "Female", "Other"],
         message: `{VALUE}, is not supported...`,
       },
     },

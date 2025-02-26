@@ -19,7 +19,6 @@ app.use("/", requestRouter)
 app.use("/", userRouter)
 connectDB()
   .then(() => {
-    console.log("Successfully Connected to DB!!")
     app.listen(7000, console.log("App is running at http://localhost:7000 !!"))
   })
   .catch((err) => {

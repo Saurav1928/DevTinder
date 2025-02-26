@@ -9,12 +9,9 @@ const NavBar = () => {
   const user = useSelector((store) => store.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  // console.log("FirstName : ", user?.firstName)
-  // console.log("NAVBAR USER:", user?.user)
-  // console.log(user?.user?.firstName)
+
   const handleLogout = async () => {
     try {
-      // console.log("Logout clivked..")
       await axios.post(BACKEND_URL + "/logout", {}, { withCredentials: true })
       dispatch(removeUser())
       return navigate("/login")

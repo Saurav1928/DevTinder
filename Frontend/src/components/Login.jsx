@@ -5,14 +5,13 @@ import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import BACKEND_URL from "../utils/constant"
 const Login = () => {
-  const [emailId, setEmailId] = useState("akshay@gmail.com")
-  const [password, setPassword] = useState("Akshay@1234")
+  const [emailId, setEmailId] = useState("saurav@gmail.com")
+  const [password, setPassword] = useState("Saurav@1234")
   const [error, setError] = useState("")
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleLogin = async () => {
     try {
-      // console.log("Login clicked")
       const res = await axios.post(
         BACKEND_URL + "/login",
         {
@@ -21,7 +20,6 @@ const Login = () => {
         },
         { withCredentials: true } // also have to do it to set the cookies in browser
       )
-      console.log("Login Success : ", res.data)
       dispatch(addUser(res.data))
       return navigate("/")
     } catch (error) {
@@ -33,6 +31,7 @@ const Login = () => {
       <div className="card bg-base-300 w-96 shadow-xl">
         <div className="card-body">
           <div className="flex flex-col gap-5">
+            <h1 className="text-center font-bold text-3xl">Login</h1>
             <label className="input input-bordered flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

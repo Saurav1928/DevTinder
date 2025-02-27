@@ -3,7 +3,6 @@ import React from "react"
 const UserCard = ({ user }) => {
 //   console.log("USER : ", user)
   const { firstName, lastName, about, photoUrl, gender, age } = user
-  console.log("USER from USER CARD : ", user)
   return (
     <div className="card bg-base-300 w-96 shadow-x ">
       <figure className="px-5 pt-5 ">

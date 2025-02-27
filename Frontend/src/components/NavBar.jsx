@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import BACKEND_URL from "../utils/constant"
 import { removeUser } from "../utils/userSlice"
+import { removeConnections } from "../utils/connectionSlice"
+import { removeFeed } from "../utils/feedSlice"
 
 const NavBar = () => {
   const user = useSelector((store) => store.user)
@@ -13,6 +15,9 @@ const NavBar = () => {
   const handleLogout = async () => {
     try {
       await axios.post(BACKEND_URL + "/logout", {}, { withCredentials: true })
+
+      dispatch(removeConnections())
+      dispatch(removeFeed())
       dispatch(removeUser())
       return navigate("/login")
     } catch (error) {
@@ -20,7 +25,7 @@ const NavBar = () => {
     }
   }
   return (
-    <div className="navbar bg-base-300 ">
+    <div className="navbar bg-base-300 fixed top-0">
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost text-xl">
           👨🏻‍💻 DevTinder
@@ -53,7 +58,7 @@ const NavBar = () => {
                 </Link>
               </li>
               <li>
-                <a>Settings</a>
+                <Link to="/connections">Connections</Link>
               </li>
               <li>
                 <a onClick={handleLogout}>Logout</a>

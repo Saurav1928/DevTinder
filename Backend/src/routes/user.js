@@ -29,7 +29,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
 })
 
 // /user/requests/accepted -> to get all the status = accepted connections..
-userRouter.get("/user/requests/accepted", userAuth, async (req, res) => {
+userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user
     const acceptedConnections = await ConnectionRequest.find({
@@ -38,14 +38,14 @@ userRouter.get("/user/requests/accepted", userAuth, async (req, res) => {
     })
       .populate("fromUserId", USER_SAFE_DATA)
       .populate("toUserId", USER_SAFE_DATA)
-    const data = acceptedConnections.map((row) => {
+    const connections = acceptedConnections.map((row) => {
       if (row.fromUserId._id.toString() === loggedInUser._id.toString())
         return row.toUserId
       return row.fromUserId
     })
     res.json({
       message: "All Accepted Connections Found...",
-      data,
+      connections,
     })
   } catch (error) {
     res.json({ message: "Error : ", error })
@@ -87,4 +87,5 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     res.status(400).send("ERROR:" + error)
   }
 })
+
 module.exports = { userRouter }

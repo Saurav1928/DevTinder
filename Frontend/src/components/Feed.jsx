@@ -27,7 +27,7 @@ const Feed = () => {
   // if (feed) console.log("F: ", feed)
   return (
     feed && (
-      <div className="flex justify-center pt-2 ">
+      <div className="flex justify-center pt-18">
         <UserCard user={feed[3]} />
       </div>
     )

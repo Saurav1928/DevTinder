@@ -9,20 +9,20 @@ const Connections = () => {
   const connections = useSelector((store) => store.connections);
   const dispatch = useDispatch();
 
-  const getConnections = async () => {
+  const fetchConnections = async () => {
     try {
       const res = await axios.get(BACKEND_URL + "/user/connections", {
         withCredentials: true,
-      });
-      dispatch(addConnections(res.data.connections));
+      })
+      dispatch(addConnections(res.data.connections))
     } catch (error) {
-      console.log("Error fetching Connections: ", error);
+      console.log("Error fetching Connections: ", error)
     }
-  };
+  }
 
   useEffect(() => {
-    if (!connections) getConnections();
-  }, [connections]);
+    if (!connections) fetchConnections()
+  }, [connections])
 
   if (connections && connections.length === 0)
     return (

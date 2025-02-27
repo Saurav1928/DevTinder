@@ -2,7 +2,7 @@ import React from "react";
 
 const AvtarCard = ({ connection }) => {
   const { firstName, lastName, about, photoUrl } = connection;
-
+console.log()
   return (
     <div className="flex justify-between items-center gap-4 bg-slate-700 p-4 text-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
       {/* Avatar Image */}

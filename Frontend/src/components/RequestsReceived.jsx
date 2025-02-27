@@ -1,8 +1,47 @@
-import React from 'react'
+import axios from "axios"
+import React, { useEffect } from "react"
+import BACKEND_URL from "../utils/constant"
+import { useDispatch, useSelector } from "react-redux"
+import { addRequests } from "../utils/requestsRecieved"
+import RequestsCard from "./RequestsCard"
 
 const RequestsReceived = () => {
+  const requestsRecieved = useSelector((store) => store.requestsRecieved)
+  const dispatch = useDispatch()
+  console.log(requestsRecieved)
+  const fetchRequests = async () => {
+    try {
+      const res = await axios.get(BACKEND_URL + "/user/requests/received", {
+        withCredentials: true,
+      })
+      // console.log("RES: ", res.data.connectionRequests)
+      dispatch(addRequests(res.data.connectionRequests))
+    } catch (err) {}
+  }
+  useEffect(() => {
+    fetchRequests()
+  }, [])
+  if (requestsRecieved && requestsRecieved.length === 0)
+    return (
+      <div className="texxt-center font-bold my-10 text-2xl">
+        No Requests found..
+      </div>
+    )
+
   return (
-    <div>RequestsReceived</div>
+    requestsRecieved && (
+      <div className="container mx-auto my-10 flex justify-center pt-10">
+        <div className="w-full max-w-3xl flex flex-col gap-4  p-5 rounded-lg shadow-md">
+          <div className="text-center text-4xl font-bold">
+            Requests Received
+          </div>
+          {requestsRecieved &&
+            requestsRecieved.map((requestsReceived, index) => (
+              <RequestsCard key={index} requestsReceived={requestsReceived} />
+            ))}
+        </div>
+      </div>
+    )
   )
 }
 

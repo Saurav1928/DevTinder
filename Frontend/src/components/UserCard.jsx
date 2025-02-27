@@ -5,14 +5,14 @@ const UserCard = ({ user }) => {
   const { firstName, lastName, about, photoUrl, gender, age } = user
   console.log("USER from USER CARD : ", user)
   return (
-    <div className="card bg-base-300 w-96 shadow-x mt-5">
-      <figure className="px-5 pt-5 mt-6">
+    <div className="card bg-base-300 w-96 shadow-x ">
+      <figure className="px-5 pt-5 ">
         {/* Fixed width and height, object-fit to maintain aspect ratio */}
         <img
           src={photoUrl}
           alt="User Image"
-          className="rounded-xl"
-          style={{ width: "300px", height: "300px", objectFit: "cover" }}
+          className="rounded-md"
+          style={{ width: "350px", height: "350px", objectFit: "cover" }}
         />
       </figure>
       <div className="card-body items-center">
@@ -22,8 +22,8 @@ const UserCard = ({ user }) => {
         </p>
         <p>{about}</p>
         <div className="card-actions mt-[-10]">
-          <button className="btn btn-primary text-black">Ignore</button>
-          <button className="btn btn-secondary text-black">Interested</button>
+          <button className="btn btn-primary ">Ignore</button>
+          <button className="btn btn-secondary ">Interested</button>
         </div>
       </div>
     </div>

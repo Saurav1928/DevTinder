@@ -28,8 +28,7 @@ const validateEditData = (req) => {
   const isEditDataValid = Object.keys(req.body).every((field) =>
     ALLOWED_EDIT_FIELDS.includes(field)
   )
-  //   console.log("Hiii : ", isEditDataValid)
-
+  
   return isEditDataValid
 }
 

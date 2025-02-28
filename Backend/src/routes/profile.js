@@ -9,7 +9,9 @@ const {
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user
-    res.send(loggedInUser)
+    const { _id, firstName, lastName, about, skills, age, gender, photoUrl } =
+      loggedInUser
+    res.send({ _id, firstName, lastName, about, skills, age, gender, photoUrl })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
@@ -29,10 +31,11 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     })
     // console.log(loggedInUser)
     await loggedInUser.save()
-
+    const { _id, firstName, lastName, about, skills, age, gender, photoUrl } =
+      loggedInUser
     res.json({
       message: "User updated successfully!",
-      updated_data: loggedInUser,
+      data: { _id, firstName, lastName, about, skills, age, gender, photoUrl },
     })
   } catch (err) {
     res.status(400).json({
@@ -57,10 +60,11 @@ profileRouter.patch("/profile/forgetPassword", userAuth, async (req, res) => {
 
     loggedInUser.password = newHashedPassword
     await loggedInUser.save()
-
+    const { _id, firstName, lastName, about, skills, age, gender, photoUrl } =
+      loggedInUser
     res.json({
       message: "Password Updated successfully!",
-      user: loggedInUser,
+      user: { _id, firstName, lastName, about, skills, age, gender, photoUrl },
     })
   } catch (error) {
     res.status(400).json({

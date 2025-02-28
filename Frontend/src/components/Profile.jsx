@@ -7,7 +7,7 @@ const Profile = () => {
   console.log("User : ", user)
   return (
     user && (
-      <div>
+      <div className="pt-20">
         <EditProfile user={user} />
       </div>
     )

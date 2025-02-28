@@ -6,7 +6,7 @@ import BACKEND_URL from "../utils/constant"
 import { removeUser } from "../utils/userSlice"
 import { removeConnections } from "../utils/connectionSlice"
 import { removeFeed } from "../utils/feedSlice"
-import { removeRequests } from "../utils/requestsRecieved"
+import { removeRequest } from "../utils/reuqestsReceivedSlice"
 
 const NavBar = () => {
   const user = useSelector((store) => store.user)
@@ -20,7 +20,7 @@ const NavBar = () => {
       dispatch(removeConnections())
       dispatch(removeFeed())
       dispatch(removeUser())
-      dispatch(removeRequests())
+
       return navigate("/login")
     } catch (error) {
       console.log("Error while logout : " + error.message)

@@ -1,8 +1,24 @@
+import axios from "axios"
 import React from "react"
+import BACKEND_URL from "../utils/constant"
 
 const UserCard = ({ user }) => {
-//   console.log("USER : ", user)
-  const { firstName, lastName, about, photoUrl, gender, age } = user
+  const { firstName, lastName, about, photoUrl, gender, age, _id } = user
+  const toUserId = _id
+  console.log("USER ID ", _id)
+  const handleReuqestSent = async (status) => {
+    try {
+      const res = await axios.post(
+        BACKEND_URL + `/request/send/${status}/${toUserId}`,
+        {},
+        { withCredentials: true }
+      )
+      console.log("REQUEST SENT to : ", firstName, +" : " + status)
+    } catch (error) {
+      console.log("Error while sending a requst : ", error)
+    }
+  }
+  //   console.log("USER : ", user)
   return (
     <div className="card bg-base-300 w-96 shadow-x ">
       <figure className="px-5 pt-5 ">
@@ -21,8 +37,18 @@ const UserCard = ({ user }) => {
         </p>
         <p>{about}</p>
         <div className="card-actions mt-[-10]">
-          <button className="btn btn-primary ">Ignore</button>
-          <button className="btn btn-secondary ">Interested</button>
+          <button
+            className="btn btn-primary "
+            onClick={() => handleReuqestSent("ignored")}
+          >
+            Ignore
+          </button>
+          <button
+            className="btn btn-secondary "
+            onClick={() => handleReuqestSent("interested")}
+          >
+            Interested
+          </button>
         </div>
       </div>
     </div>

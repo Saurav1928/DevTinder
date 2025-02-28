@@ -2,13 +2,13 @@ import axios from "axios"
 import React, { useEffect } from "react"
 import BACKEND_URL from "../utils/constant"
 import { useDispatch, useSelector } from "react-redux"
-import { addRequests } from "../utils/requestsRecieved"
+import { addRequests } from "../utils/reuqestsReceivedSlice"
 import RequestsCard from "./RequestsCard"
 
 const RequestsReceived = () => {
   const requestsRecieved = useSelector((store) => store.requestsRecieved)
   const dispatch = useDispatch()
-  console.log(requestsRecieved)
+  // console.log(requestsRecieved)
   const fetchRequests = async () => {
     try {
       const res = await axios.get(BACKEND_URL + "/user/requests/received", {
@@ -23,7 +23,7 @@ const RequestsReceived = () => {
   }, [])
   if (requestsRecieved && requestsRecieved.length === 0)
     return (
-      <div className="texxt-center font-bold my-10 text-2xl">
+      <div className="text-center font-bold my-10 text-2xl pt-10 ">
         No Requests found..
       </div>
     )

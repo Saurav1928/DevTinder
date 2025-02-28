@@ -1,23 +1,29 @@
 import axios from 'axios'
 import React from 'react'
 import BACKEND_URL from '../utils/constant'
+import { useDispatch } from "react-redux"
+import { removeRequest } from "../utils/reuqestsReceivedSlice"
 
 const RequestsCard = ({ requestsReceived }) => {
-  console.log("REQ:", requestsReceived)
-  const {_id}=requestsReceived
+  // console.log("REQ:", requestsReceived)
+  const dispatch = useDispatch()
+
+  const { _id } = requestsReceived
   const { firstName, lastName, about, photoUrl } = requestsReceived.fromUserId
-const handleRequest= async (status)=>{
-try {
-    const res= await axios.post(BACKEND_URL+`/request/review/${status}/${_id}`,{}, {withCredentials:true} )
-console.log("Request ", status, " successfully!!")
-console.log("RES : ", res)
-} catch (error) {
-    console.log("Error while reviewing request : ", error)
-}
-}
+  const reviewRequest = async (status) => {
+    try {
+      const res = await axios.post(
+        BACKEND_URL + `/request/review/${status}/${_id}`,
+        {},
+        { withCredentials: true }
+      )
+      dispatch(removeRequest(_id))
+    } catch (error) {
+      console.log("Error while reviewing request : ", error)
+    }
+  }
   return (
     <div className="flex justify-between items-center gap-4 bg-slate-700 p-4 text-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-      {/* Avatar Image */}
       <div className="flex justify-around items-center gap-5">
         <figure className="w-16 h-16">
           <img
@@ -35,11 +41,17 @@ console.log("RES : ", res)
           <p className="text-sm ">{about || "No description available."}</p>
         </div>
       </div>
-      <button className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-md bg-green-500" onClick={()=>handleRequest("accepted")}>
-        Accept 
+      <button
+        className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-md bg-green-500"
+        onClick={() => reviewRequest("accepted")}
+      >
+        Accept
       </button>
-      <button className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-md bg-red-500" onClick={()=>handleRequest("rejected")}>
-        Reject 
+      <button
+        className="btn btn-xs sm:btn-sm md:btn-sm lg:btn-md bg-red-500"
+        onClick={() => reviewRequest("rejected")}
+      >
+        Reject
       </button>
     </div>
   )

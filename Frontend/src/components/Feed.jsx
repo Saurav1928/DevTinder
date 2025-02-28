@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { addFeed } from "../utils/feedSlice"
 import UserCard from "./UserCard"
 
+
 const Feed = () => {
   const dispatch = useDispatch()
   const feed = useSelector((store) => store.feed)
@@ -24,11 +25,18 @@ const Feed = () => {
   useEffect(() => {
     getFeed()
   }, [])
-  // if (feed) console.log("F: ", feed)
+  // if (feed) con
+  console.log("F: ", feed)
+  if (feed && feed.length === 0)
+    return (
+      <div className="mt-20 text-center text-4xl font-bold pt-10">
+        Empty Feed
+      </div>
+    )
   return (
     feed && (
       <div className="flex justify-center pt-18">
-        <UserCard user={feed[3]} />
+        <UserCard user={feed[0]} />
       </div>
     )
   )

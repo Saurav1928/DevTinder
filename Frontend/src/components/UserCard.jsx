@@ -1,19 +1,26 @@
 import axios from "axios"
 import React from "react"
 import BACKEND_URL from "../utils/constant"
+import { useDispatch } from "react-redux"
+import { removeUserFromFeed } from "../utils/feedSlice"
 
 const UserCard = ({ user }) => {
+  // console.log("USER CARD : ", user)
+  const dispatch = useDispatch()
   const { firstName, lastName, about, photoUrl, gender, age, _id } = user
   const toUserId = _id
-  console.log("USER ID ", _id)
-  const handleReuqestSent = async (status) => {
+  // console.log("USER ID ", _id)
+  const sendRequest = async (status) => {
     try {
       const res = await axios.post(
         BACKEND_URL + `/request/send/${status}/${toUserId}`,
         {},
         { withCredentials: true }
       )
-      console.log("REQUEST SENT to : ", firstName, +" : " + status)
+      console.log("RES : ", res.data)
+      dispatch(removeUserFromFeed(toUserId))
+
+      // console.log("REQUEST SENT to : ", firstName + " : " + status)
     } catch (error) {
       console.log("Error while sending a requst : ", error)
     }
@@ -39,13 +46,13 @@ const UserCard = ({ user }) => {
         <div className="card-actions mt-[-10]">
           <button
             className="btn btn-primary "
-            onClick={() => handleReuqestSent("ignored")}
+            onClick={() => sendRequest("ignored")}
           >
             Ignore
           </button>
           <button
             className="btn btn-secondary "
-            onClick={() => handleReuqestSent("interested")}
+            onClick={() => sendRequest("interested")}
           >
             Interested
           </button>

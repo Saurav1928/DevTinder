@@ -57,6 +57,7 @@ authRouter.post("/login", async (req, res) => {
         gender: user.gender,
         photoUrl: user.photoUrl,
         age: user.age,
+        _id: user._id,
       }
       res.send(data)
     } else {

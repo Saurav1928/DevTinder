@@ -24,7 +24,7 @@ const RequestsCard = ({ requestsReceived }) => {
   }
   return (
     <div className="flex justify-between items-center gap-4 bg-slate-700 p-4 text-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-      <div className="flex justify-around items-center gap-5">
+      <div className="flex justify-start items-center gap-5 w-[50%]">
         <figure className="w-16 h-16">
           <img
             src={photoUrl || "https://via.placeholder.com/150"}

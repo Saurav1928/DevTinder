@@ -4,7 +4,6 @@ import { useSelector } from "react-redux"
 
 const Profile = () => {
   const user = useSelector((store) => store.user)
-  console.log("User : ", user)
   return (
     user && (
       <div className="pt-20">

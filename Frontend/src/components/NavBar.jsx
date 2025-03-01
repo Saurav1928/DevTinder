@@ -2,11 +2,12 @@ import axios from "axios"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
-import BACKEND_URL from "../utils/constant"
+//
 import { removeUser } from "../utils/userSlice"
 import { removeConnections } from "../utils/connectionSlice"
 import { removeFeed } from "../utils/feedSlice"
-import { removeRequest } from "../utils/reuqestsReceivedSlice"
+import { removeAllRequests, removeRequest } from "../utils/reuqestsReceivedSlice"
+import BACKEND_URL from "../utils/constant"
 
 const NavBar = () => {
   const user = useSelector((store) => store.user)
@@ -15,12 +16,15 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(BACKEND_URL + "/logout", {}, { withCredentials: true })
-
+      await axios.post(
+       BACKEND_URL + "/logout",
+        {},
+        { withCredentials: true }
+      )
       dispatch(removeConnections())
       dispatch(removeFeed())
       dispatch(removeUser())
-
+      dispatch(removeAllRequests());
       return navigate("/welcomePage")
     } catch (error) {
       console.log("Error while logout : " + error.message)

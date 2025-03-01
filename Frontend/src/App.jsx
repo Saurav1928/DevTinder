@@ -8,9 +8,10 @@ import Feed from "./components/Feed"
 import ErrorPage from "./components/ErrorPage"
 import Connections from "./components/Connections"
 import RequestsReceived from "./components/RequestsReceived"
-import SingUp from "./components/SingUp"
-
+import SingUp from "./components/SignUp"
+//
 import WelcomePage from "./components/WelcomePage"
+import SignUp from "./components/SignUp"
 function App() {
   return (
     <Provider store={appStore}>
@@ -20,7 +21,7 @@ function App() {
             <Route path="/welcomePage" element={<WelcomePage />} />
             <Route path="/" element={<Feed />} />
 
-            <Route path="/signup" element={<SingUp />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/error" element={<ErrorPage />} />

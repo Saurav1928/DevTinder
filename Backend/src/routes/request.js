@@ -2,6 +2,17 @@ const express = require("express")
 const requestRouter = express.Router()
 const { userAuth } = require("../middlewares/auth")
 const ConnectionRequest = require("../models/connectionRequest.model")
+const User = require("../models/user.model")
+
+const USER_SAFE_DATA = [
+  "firstName",
+  "lastName",
+  "photoUrl",
+  "about",
+  "skills",
+  "gender",
+  "age",
+]
 
 requestRouter.post(
   "/request/send/:status/:toUserId",
@@ -60,13 +71,30 @@ requestRouter.post(
         status: "interested",
       })
       if (!connectionRequest) throw new Error("Connection Request Not Found..")
-      // console.log(connectionRequest)
+
       connectionRequest.status = status
-      // console.log(connectionRequest)
+
       const data = await connectionRequest.save()
+      const fromUserId = data.fromUserId
+      const userOfWhomReuqestIsAccepted = await User.findOne({
+        _id: fromUserId,
+      })
+      const { _id, firstName, lastName, photoUrl, about, skills, gender, age } =
+        userOfWhomReuqestIsAccepted
+
       res.json({
         message: "Connection Request " + status + " successfully!!",
         data,
+        userOfWhomReuqestIsAccepted: {
+          _id,
+          firstName,
+          lastName,
+          photoUrl,
+          about,
+          skills,
+          gender,
+          age,
+        },
       })
     } catch (err) {
       res.status(400).send("ERROR : " + err)

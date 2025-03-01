@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 import UserCard from "./UserCard"
-import BACKEND_URL from "../utils/constant"
+
 import axios from "axios"
 import { useDispatch } from "react-redux"
 import { addUser } from "../utils/userSlice"
 import Toast from "./Toast"
-
+import BACKEND_URL from "../utils/constant"
+//
 const EditProfile = ({ user }) => {
   if (!user) return <div>No User</div>
   const [firstName, setFirstName] = useState(user.firstName || "")
@@ -38,7 +39,6 @@ const EditProfile = ({ user }) => {
       setTimeout(() => {
         setShowToast(false)
       }, 1000)
-      //   console.log("Profile Updated Successfully : ", updatedProfile)
     } catch (err) {
       console.log("Error : ", err)
       setError(err)

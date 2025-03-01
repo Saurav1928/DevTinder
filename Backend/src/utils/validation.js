@@ -2,7 +2,6 @@ const validator= require("validator")
 const bcrypt = require("bcrypt")
 const validateSignUpData = (req) => {
   const { firstName, lastName, emailId, password } = req.body
-  // console.log("Validating:", firstName, lastName, emailId, password);
   if (!firstName || !lastName) {
     throw new Error("Name is not valid!!")
   } else if (firstName.length < 4 || firstName.length > 30) {

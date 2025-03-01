@@ -1,11 +1,12 @@
 import axios from 'axios'
 import React from 'react'
-import BACKEND_URL from '../utils/constant'
+
 import { useDispatch } from "react-redux"
 import { removeRequest } from "../utils/reuqestsReceivedSlice"
-
+import BACKEND_URL from "../utils/constant"
+import { addConnection } from "../utils/connectionSlice"
+//
 const RequestsCard = ({ requestsReceived }) => {
-  // console.log("REQ:", requestsReceived)
   const dispatch = useDispatch()
 
   const { _id } = requestsReceived
@@ -17,7 +18,10 @@ const RequestsCard = ({ requestsReceived }) => {
         {},
         { withCredentials: true }
       )
+
       dispatch(removeRequest(_id))
+      if (status == "accepted")
+        dispatch(addConnection(res.data.userOfWhomReuqestIsAccepted))
     } catch (error) {
       console.log("Error while reviewing request : ", error)
     }

@@ -17,7 +17,7 @@ const userSchema = new Schema(
     },
     emailId: {
       type: String,
-      unique: true, // as this field is unique, it automatically creates an index
+      unique: [true, "Email must be unique..."],
       required: true,
       trim: true,
       lowercase: true,
@@ -76,16 +76,16 @@ userSchema.index({ firstName: 1, lastName: 1 })
 // DONT USE ARROW FUNCTION OVER HERE
 userSchema.methods.getJWT = async function () {
   const user = this
-  const token = await jwt.sign({ _id: user._id }, "mySecret1234", {
+  const token = await jwt.sign({ _id: user._id }, process.env.MY_SECRET, {
     expiresIn: "7d",
   })
-  // console.log("NEW TOKEN : ", token)
+ 
   return token
 }
 
 userSchema.methods.validatePassword = async function (passwordInputByUser) {
   const user = this
-  // console.log("Hii i am called!")
+  
   const isPasswordCorrect = await bcrypt.compare(passwordInputByUser, user.password)
   return isPasswordCorrect
 }

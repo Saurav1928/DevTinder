@@ -23,13 +23,12 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     }
 
     const loggedInUser = req.user
-    // console.log(loggedInUser)
+   
 
     Object.keys(req.body).forEach((field) => {
-      // console.log(field)
+ 
       loggedInUser[field] = req.body[field]
-    })
-    // console.log(loggedInUser)
+    }) 
     await loggedInUser.save()
     const { _id, firstName, lastName, about, skills, age, gender, photoUrl } =
       loggedInUser

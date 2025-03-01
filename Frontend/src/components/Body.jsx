@@ -3,9 +3,10 @@ import NavBar from "./NavBar"
 import { Outlet, useNavigate } from "react-router-dom"
 import Footer from "./Footer"
 import { useDispatch, useSelector } from "react-redux"
-import BACKEND_URL from "../utils/constant"
+
 import { addUser } from "../utils/userSlice"
 import axios from "axios"
+import BACKEND_URL from "../utils/constant"
 const Body = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()

@@ -4,7 +4,7 @@ const User= require("../models/user.model")
    try {
      const { token } = req.cookies
      if (!token) return res.status(401).send("Please Login to access the app..")
-     const decodedData = await jwt.verify(token, "mySecret1234")
+     const decodedData = await jwt.verify(token, process.env.MY_SECRET)
 
      const { _id } = decodedData
      const user = await User.findById(_id)

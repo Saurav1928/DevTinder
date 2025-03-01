@@ -1,27 +1,29 @@
 import axios from "axios"
 import React, { useEffect } from "react"
-import BACKEND_URL from "../utils/constant"
+
 import { useDispatch, useSelector } from "react-redux"
 import { addRequests } from "../utils/reuqestsReceivedSlice"
 import RequestsCard from "./RequestsCard"
-
+import BACKEND_URL from "../utils/constant"
+//
 const RequestsReceived = () => {
   const requestsRecieved = useSelector((store) => store.requestsRecieved)
   const dispatch = useDispatch()
-  // console.log(requestsRecieved)
+
   const fetchRequests = async () => {
     try {
       const res = await axios.get(BACKEND_URL + "/user/requests/received", {
         withCredentials: true,
       })
-      // console.log("RES: ", res.data.connectionRequests)
+
       dispatch(addRequests(res.data.connectionRequests))
     } catch (err) {}
   }
   useEffect(() => {
     fetchRequests()
   }, [])
-  if (requestsRecieved && requestsRecieved.length === 0)
+
+  if (!requestsRecieved || (requestsRecieved && requestsRecieved.length === 0))
     return (
       <div className="text-center font-bold my-10 text-2xl pt-10 ">
         No Requests found..

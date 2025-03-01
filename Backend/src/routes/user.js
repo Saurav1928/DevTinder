@@ -16,13 +16,19 @@ const User = require("../models/user.model")
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user
+
+    // const allRequests = await ConnectionRequest.find({})
+
     const connectionRequests = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
       status: "interested",
     }).populate("fromUserId", USER_SAFE_DATA)
-    if (connectionRequests.length == 0)
+
+    if (connectionRequests.length == 0) {
       res.json({ message: "No Request Found.." })
-    else res.json({ message: "Requests found", connectionRequests })
+    } else {
+      res.json({ message: "Requests found", connectionRequests })
+    }
   } catch (error) {
     res.json({ message: "Error : ", error })
   }
@@ -76,12 +82,16 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       usersWhomLoggedInUserWantToHide.add(req.fromUserId.toString())
       usersWhomLoggedInUserWantToHide.add(req.toUserId.toString())
     })
+    // bug fix : if there are no any connection then above loop wont
+    // work here hence the loggedin user will be shown to himself in his feed
+    usersWhomLoggedInUserWantToHide.add(loggedInUser._id)
     const feed = await User.find({
       _id: { $nin: Array.from(usersWhomLoggedInUserWantToHide) },
     })
       .select(USER_SAFE_DATA)
       .skip(skip)
       .limit(limit)
+
     res.json(feed)
   } catch (error) {
     res.status(400).send("ERROR:" + error)

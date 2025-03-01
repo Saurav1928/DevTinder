@@ -26,10 +26,10 @@ const Connections = () => {
 
   if (connections && connections.length === 0)
     return (
-      <div className="text-center font-bold my-10 text-2xl">
+      <div className="text-center font-bold my-10 text-2xl pt-10">
         No connections found
       </div>
-    );
+    )
 
   return (
     <div className="container mx-auto my-10 flex justify-center pt-10">

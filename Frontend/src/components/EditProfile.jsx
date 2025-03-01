@@ -47,7 +47,7 @@ const EditProfile = ({ user }) => {
 
   return (
     <>
-      <div className="flex justify-center gap-10 my-5">
+      <div className="flex justify-center gap-10 my-5 pb-20">
         <div className="flex justify-center items-center ">
           <div className="card bg-base-300 w-96 shadow-xl min-h-full flex flex-col justify-between">
             <div className="card-body">
@@ -156,6 +156,7 @@ const EditProfile = ({ user }) => {
         </div>
         <UserCard
           user={{ firstName, lastName, photoUrl, about, age, gender }}
+          showButtonsOfCard={false}
         />
       </div>
       {showToast && <Toast />}

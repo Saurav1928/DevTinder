@@ -5,7 +5,8 @@ const ErrorPage = () => {
   const navigate = useNavigate();
 
   const handleBackToHome = () => {
-    navigate('/login');
+    // if route is signup then route to signup
+    navigate("/welcomePage")
   };
 
   return (

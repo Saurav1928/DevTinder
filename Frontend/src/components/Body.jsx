@@ -19,7 +19,7 @@ const Body = () => {
       dispatch(addUser(res.data))
     } catch (err) {
       if (err.status === 401) {
-        navigate("/error")
+        navigate("/welcomePage")
       } else console.log("ERROR : ", err)
     }
   }

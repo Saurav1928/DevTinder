@@ -21,7 +21,7 @@ const NavBar = () => {
       dispatch(removeFeed())
       dispatch(removeUser())
 
-      return navigate("/login")
+      return navigate("/welcomePage")
     } catch (error) {
       console.log("Error while logout : " + error.message)
     }
@@ -29,7 +29,10 @@ const NavBar = () => {
   return (
     <div className="navbar bg-base-300 fixed top-0">
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl">
+        <Link
+          to={user ? "/" : "/welcomePage"}
+          className="btn btn-ghost text-xl"
+        >
           👨🏻‍💻 DevTinder
         </Link>
       </div>
@@ -51,7 +54,7 @@ const NavBar = () => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-base-300  rounded-box z-[10]  w-52  shadow"
             >
               <li>
                 <Link to="/profile" className="justify-between">

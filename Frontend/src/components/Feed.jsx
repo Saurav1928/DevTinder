@@ -4,12 +4,15 @@ import BACKEND_URL from "../utils/constant"
 import { useDispatch, useSelector } from "react-redux"
 import { addFeed } from "../utils/feedSlice"
 import UserCard from "./UserCard"
-
+import { useNavigate } from "react-router-dom"
 
 const Feed = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user = useSelector((store) => store.user)
   const feed = useSelector((store) => store.feed)
-
+  console.log("USER : ", user)
+  if (!user) navigate("/weclomePage")
   const getFeed = async () => {
     if (feed) return
     try {
@@ -25,6 +28,11 @@ const Feed = () => {
   useEffect(() => {
     getFeed()
   }, [])
+  useEffect(() => {
+    if (!user) {
+      navigate("/welcomePage") // Redirect to welcome page if user is not logged in
+    }
+  }, [user, navigate])
   // if (feed) con
   console.log("F: ", feed)
   if (feed && feed.length === 0)
@@ -36,7 +44,7 @@ const Feed = () => {
   return (
     feed && (
       <div className="flex justify-center pt-18">
-        <UserCard user={feed[0]} />
+        <UserCard user={feed[0]} showButtonsOfCard={true} />
       </div>
     )
   )

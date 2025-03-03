@@ -82,8 +82,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       usersWhomLoggedInUserWantToHide.add(req.fromUserId.toString())
       usersWhomLoggedInUserWantToHide.add(req.toUserId.toString())
     })
-    // bug fix : if there are no any connection then above loop wont
-    // work here hence the loggedin user will be shown to himself in his feed
+    
     usersWhomLoggedInUserWantToHide.add(loggedInUser._id)
     const feed = await User.find({
       _id: { $nin: Array.from(usersWhomLoggedInUserWantToHide) },

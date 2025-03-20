@@ -26,6 +26,7 @@ const PORT = process.env.PORT || 3000
 
 connectDB()
   .then(() => {
+    console.log("Connected to DB!!")
     app.listen(
       PORT,
       console.log(`App is running at http://localhost:${PORT} !!`)

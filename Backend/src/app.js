@@ -33,5 +33,5 @@ connectDB()
     )
   })
   .catch((err) => {
-    console.log("Failed to connect to DB!!")
+    console.log("Failed to connect to DB!!", err?.message)
   })

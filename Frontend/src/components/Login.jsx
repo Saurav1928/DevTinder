@@ -7,8 +7,8 @@ import BACKEND_URL from "../utils/constant"
 //
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("saurav@gmail.com")
-  const [password, setPassword] = useState("Saurav@1234")
+  const [emailId, setEmailId] = useState("")
+  const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const user = useSelector((store) => store.user)
   const dispatch = useDispatch()

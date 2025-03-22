@@ -3,7 +3,7 @@ const requestRouter = express.Router()
 const { userAuth } = require("../middlewares/auth")
 const ConnectionRequest = require("../models/connectionRequest.model")
 const User = require("../models/user.model")
-
+const sendEmail = require("../utils/sendEmail")
 const USER_SAFE_DATA = [
   "firstName",
   "lastName",
@@ -41,6 +41,8 @@ requestRouter.post(
       if (existingConnectionRequest)
         throw new Error(`You cant sent more than one request to same person..`)
       const connectionData = await newConnectionRequest.save()
+      const resEmail = await sendEmail.run()
+      console.log("Mail sent...", resEmail)
       return res.json({
         message: "Connection Request Sent Successfully!!",
         connectionData: connectionData,

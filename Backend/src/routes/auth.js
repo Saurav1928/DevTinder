@@ -4,6 +4,7 @@ const { validateSignUpData } = require("../utils/validation")
 const bcrypt= require("bcrypt")
 const User = require("../models/user.model")
 const validator= require("validator")
+const verifyEmail = require("../utils/sesVerifyEmailIdentity")
 authRouter.post("/signup", async (req, res, next) => {
   try {
     //step 1: validate the data
@@ -26,10 +27,10 @@ authRouter.post("/signup", async (req, res, next) => {
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
     })
-    
-    res.send(newUser)
+    const verifiedEmail = await verifyEmail.run(emailId)
+
+    res.send({ newUser, verifiedEmail })
   } catch (error) {
-   
     res.status(500).json({ error: error.message })
   }
 })
@@ -45,6 +46,7 @@ authRouter.post("/login", async (req, res) => {
     // Find user by emailId
     const user = await User.findOne({ emailId: emailId })
     if (!user) {
+      console.log("No User Found...")
       throw new Error("Invalid Credentials...")
     }
     // Compare passwords
@@ -68,6 +70,7 @@ authRouter.post("/login", async (req, res) => {
       }
       res.send(data)
     } else {
+      console.log("Wrong Pass Credentials...")
       throw new Error("Invalid Credentials...")
     }
   } catch (error) {

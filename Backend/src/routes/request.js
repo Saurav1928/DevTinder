@@ -41,8 +41,27 @@ requestRouter.post(
       if (existingConnectionRequest)
         throw new Error(`You cant sent more than one request to same person..`)
       const connectionData = await newConnectionRequest.save()
-      const resEmail = await sendEmail.run()
-      console.log("Mail sent...", resEmail)
+      const toUser = await User.findOne({ _id: toUserId })
+      const fromUser = req.user
+      if (status === "interested") {
+        const resEmail = await sendEmail.run({
+          fromEmail: fromUser.emailId,
+          toEmail: toUser.emailId,
+          subject: "🚀 You've Got a Connection Request on DevTinder!",
+          body: `Hi ${toUser.firstName},
+        
+        I hope you're doing well! ${fromUser.firstName} has sent you a connection request on DevMatcher (https://devmatcher.online) and would love to collaborate on exciting projects with you. 
+        
+        Whether you're looking to build the next big thing or share some ideas, this could be the perfect opportunity to create something amazing together. Let's connect and start innovating!
+        
+        Best,
+        The DevTinder Team`,
+        })
+
+        // console.log("Request sent...", resEmail)
+      }
+
+      // console.log({ toUser, fromUser })
       return res.json({
         message: "Connection Request Sent Successfully!!",
         connectionData: connectionData,
@@ -81,9 +100,28 @@ requestRouter.post(
       const userOfWhomReuqestIsAccepted = await User.findOne({
         _id: fromUserId,
       })
+      // console.log("Request is accepted from ", userOfWhomReuqestIsAccepted)
+      // console.log("Request is accepted by ", loggedInUser)
       const { _id, firstName, lastName, photoUrl, about, skills, gender, age } =
         userOfWhomReuqestIsAccepted
+      if (status === "accepted") {
+        console.log("--------------------------------------------")
+        console.log(loggedInUser)
+        console.log(userOfWhomReuqestIsAccepted)
+        console.log("--------------------------------------------")
 
+        const requestAccepted = await sendEmail.run({
+          fromEmail: loggedInUser.emailId,
+          toEmail: userOfWhomReuqestIsAccepted.emailId,
+          subject: "🚀 Your Connection Request has been Accepted on DevTinder!",
+          body: `Hi ${userOfWhomReuqestIsAccepted.firstName},
+          I hope you're doing well! ${loggedInUser.firstName} has accepted your connection request on DevMatcher (https://devmatcher.online) and would love to collaborate on exciting projects with you. 
+          Whether you're looking to build the next big thing or share some ideas, this could be the perfect opportunity to create something amazing together. \nLet's connect and start innovating!
+          \nBest,
+          The DevTinder Team`,
+        })
+        // console.log("Request Accepted...", requestAccepted)
+      }
       res.json({
         message: "Connection Request " + status + " successfully!!",
         data,

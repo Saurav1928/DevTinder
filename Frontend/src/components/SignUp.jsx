@@ -35,7 +35,8 @@ const SignUp = () => {
 
         setError("")
        
-        dispatch(addUser(res.data))
+        dispatch(addUser(res?.data?.user))
+        console.log("Data from signup", res.data)
         navigate("/profile") // Redirect to homepage after successful signup
       } else {
         setError("Please fill in all fields.")

@@ -50,7 +50,7 @@ const userSchema = new Schema(
     photoUrl: {
       type: String,
       default:
-        "https://media.licdn.com/dms/image/v2/D5603AQET2Masncv6NQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1715090342283?e=1746057600&v=beta&t=0OI9UWrl7YPS--RLGRH2q0EcSvY0Z7RHyAUdul_WHBg",
+        "https://media.licdn.com/dms/image/v2/D5603AQHLa7XwSS7C7w/profile-displayphoto-shrink_800_800/B56ZW40rWBHoAc-/0/1742562573614?e=1748476800&v=beta&t=P6QFoW9jBEWHqXYRJCq2ApMXA8lesx9Rcg8fzBEwpNs",
       validate(value) {
         if (!validator.isURL(value))
           throw new Error("Photo URL is INVALID: " + value)

@@ -1,6 +1,6 @@
 const dotenv = require("dotenv")
 dotenv.config() // Make sure this is at the top before using process.env
-
+require("./utils/cronJob")
 const express = require("express")
 const { connectDB } = require("./config/database")
 const app = express()

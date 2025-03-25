@@ -1,21 +1,29 @@
-const { VerifyEmailIdentityCommand } =require ("@aws-sdk/client-ses");
-const { sesClient } =require( "./sesClient.js");
-
-// const EMAIL_ADDRESS = "name@example.com";
+const { VerifyEmailIdentityCommand } = require("@aws-sdk/client-ses")
+const { sesClient } = require("./sesClient.js")
+const checkVerificationStatus = require("./sesEmailCheckVerified.js")
 
 const createVerifyEmailIdentityCommand = (emailAddress) => {
-  return new VerifyEmailIdentityCommand({ EmailAddress: emailAddress });
-};
+  return new VerifyEmailIdentityCommand({ EmailAddress: emailAddress })
+}
 
 const run = async (email) => {
-  const verifyEmailIdentityCommand =
-    createVerifyEmailIdentityCommand(email);
   try {
-    return await sesClient.send(verifyEmailIdentityCommand);
+    const VerificationStatus = await checkVerificationStatus(email)
+    if (VerificationStatus === "Success") {
+      console.log("Email is already verified.")
+      return "Email is already verified."
+    } else if (!VerificationStatus) {
+      console.log("Failed to retrieve verification status.")
+      return "Error checking verification status."
+    }
+
+    console.log("Email is not verified. Verifying..")
+    const verifyEmailIdentityCommand = createVerifyEmailIdentityCommand(email)
+    return await sesClient.send(verifyEmailIdentityCommand)
   } catch (err) {
-    console.log("Failed to verify email identity.", err);
-    return err;
+    console.log("Failed to verify email identity.", err)
+    return err
   }
-};
-// snippet-end:[ses.JavaScript.identities.verifyEmailIdentityV3]
-module.exports={ run};
+}
+
+module.exports = { run }

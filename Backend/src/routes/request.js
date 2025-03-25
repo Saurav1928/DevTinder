@@ -105,10 +105,10 @@ requestRouter.post(
       const { _id, firstName, lastName, photoUrl, about, skills, gender, age } =
         userOfWhomReuqestIsAccepted
       if (status === "accepted") {
-        console.log("--------------------------------------------")
-        console.log(loggedInUser)
-        console.log(userOfWhomReuqestIsAccepted)
-        console.log("--------------------------------------------")
+        // console.log("--------------------------------------------")
+        // console.log(loggedInUser)
+        // console.log(userOfWhomReuqestIsAccepted)
+        // console.log("--------------------------------------------")
 
         const requestAccepted = await sendEmail.run({
           fromEmail: loggedInUser.emailId,

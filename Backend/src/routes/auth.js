@@ -5,15 +5,17 @@ const bcrypt= require("bcrypt")
 const User = require("../models/user.model")
 const validator= require("validator")
 const verifyEmail = require("../utils/sesVerifyEmailIdentity")
+
 authRouter.post("/signup", async (req, res, next) => {
   try {
-    //step 1: validate the data
+    // Step 1: Validate the data
     validateSignUpData(req)
-    //step 2: encrypt the password
+
+    // Step 2: Encrypt the password
     const { firstName, lastName, emailId, password } = req.body
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    //step 3: creating a new instance and saving to DB
+    // Step 3: Creating a new instance and saving to DB
     const newUser = new User({
       firstName,
       lastName,
@@ -23,10 +25,12 @@ authRouter.post("/signup", async (req, res, next) => {
     await newUser.save()
     const token = await newUser.getJWT()
 
-    // step2 : add a token to cookie and send the resposne back to the user
+    // Step 4: Add a token to cookie and send the response back to the user
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
     })
+
+    // Step 5: Check if the email is verified and send verification if needed
     const verifiedEmail = await verifyEmail.run(emailId)
 
     res.send({ newUser, verifiedEmail })

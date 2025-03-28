@@ -12,6 +12,7 @@ import SingUp from "./components/SignUp"
 //
 import WelcomePage from "./components/WelcomePage"
 import SignUp from "./components/SignUp"
+import Premium from "./components/Premium"
 function App() {
   return (
     <Provider store={appStore}>
@@ -26,6 +27,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/error" element={<ErrorPage />} />
             <Route path="/connections" element={<Connections />} />
+            <Route path="/premium" element={<Premium />} />
             <Route path="/requests" element={<RequestsReceived />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Route>

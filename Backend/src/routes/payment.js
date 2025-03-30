@@ -14,7 +14,8 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
     // console.log("Req Body : ", req?.body?.planName)
     const { membershipType } = req?.body
     const { firstName, lastName, emailId } = req?.user
-    console.log(req?.body)
+    // console.log(req?.body)
+    console.log("Payment create order called for : ", member)
     const order = await razorpayInstance.orders.create({
       amount: membershipAmount[membershipType] * 100,
       currency: "INR",
@@ -56,7 +57,8 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
 // so no need of userAuth middleware here
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
-    const webHookSignature = req.headers["X-Razorpay-Signature"]
+    const webHookSignature = req.headers("X-Razorpay-Signature")
+    if (!webHookSignature) throw new Error("Invalid webhook sign")
     const isWebhookValid = validateWebhookSignature(
       JSON.stringify(req.body),
       webHookSignature,
@@ -79,13 +81,14 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     const user = await User.findOne({ _id: payment.userId })
     user.isPremium = true
 
-    user.membershipType = payment.notes.memebershipType
+    user.membershipType = payment.notes.membershipAmount
     await user.save()
     // if (req.body.event === "payment.captured") {
     // }
     // if (req.body.event === "payment.failed") {
     // }
-    // return success response to razorpay - if we wont return then infinte loop
+    // return success response to razorpay - if we wont return then infinte
+    return res.json({ msg: "Webhook received successfully..." })
   } catch (error) {
     return res.status(500).json({ msg: error.message })
   }

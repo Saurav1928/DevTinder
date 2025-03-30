@@ -8,9 +8,7 @@ const membershipAmount = require("../utils/constant")
 const {
   validateWebhookSignature,
 } = require("razorpay/dist/utils/razorpay-utils")
-const {
-  validateWebhookSignature,
-} = require("razorpay/dist/utils/razorpay-utils")
+
 paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
   try {
     // console.log("Req Body : ", req?.body?.planName)

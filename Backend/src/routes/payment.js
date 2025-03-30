@@ -14,8 +14,8 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
     // console.log("Req Body : ", req?.body?.planName)
     const { membershipType } = req?.body
     const { firstName, lastName, emailId } = req?.user
-    // console.log(req?.body)
-    console.log("Payment create order called for : ", membershipType)
+    console.log("Req:" ,req?.user)
+    // console.log("Payment create order called for : ", membershipType)
     const order = await razorpayInstance.orders.create({
       amount: membershipAmount[membershipType] * 100,
       currency: "INR",
@@ -24,7 +24,7 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
         firstName,
         lastName,
         emailId,
-        membershipType,
+        membershipType:   membershipType,
       },
     })
 
@@ -43,8 +43,7 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
     const savedPayment = await payment.save()
     // return back the order details to the frontend
     return res.json({
-      ...savedPayment.toJSON(),
-      keyId: process.env.RAZORPAY_KEY_ID,
+      ...savedPayment.toJSON(),  keyId: process.env.RAZORPAY_KEY_ID,
     })
   } catch (error) {
     // console.log("Error :  ", error)
@@ -57,8 +56,9 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
 // so no need of userAuth middleware here
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
-    const webHookSignature = req.headers("X-Razorpay-Signature")
-    if (!webHookSignature) throw new Error("Invalid webhook sign")
+    console.log("Webhook called..")
+    const webHookSignature = req.get("X-Razorpay-Signature")
+    console.log("Webhook sign : ", webHookSignature)
     const isWebhookValid = validateWebhookSignature(
       JSON.stringify(req.body),
       webHookSignature,
@@ -68,7 +68,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
       return res.status(500).json({ msg: "Webhook signature is invalid...." })
     }
 
-    // webhook is valid
+    // webhook sign is valid
 
     const paymentDetails = req.body.payload.payment.entity
     const payment = await Payment.findOne({
@@ -79,9 +79,8 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     await payment.save()
     // update the user as premium
     const user = await User.findOne({ _id: payment.userId })
-    user.isPremium = true
-
-    user.membershipType = payment.notes.membershipAmount
+    user.isPremium = true;
+    user.membershipType = payment.notes.membershipType;
     await user.save()
     // if (req.body.event === "payment.captured") {
     // }
@@ -95,3 +94,6 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 })
 
 module.exports = paymentRouter
+
+
+// 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

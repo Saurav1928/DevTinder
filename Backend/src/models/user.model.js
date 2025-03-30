@@ -56,6 +56,13 @@ const userSchema = new Schema(
           throw new Error("Photo URL is INVALID: " + value)
       },
     },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
+    membershipType: {
+      type: String,
+    },
     skills: {
       type: [String],
       // we can have db level validations also and also API level as well

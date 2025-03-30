@@ -26,17 +26,18 @@ const PremiumCard = ({
       amount: amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
       currency: currency,
       name: "Dev Tinder",
-      description: 'Connect with other developers and collaborate on exciting projects.',
+      description:
+        "Connect with other developers and collaborate on exciting projects.",
       order_id: orderId, // This is the order_id created in the backend
-    prefill: {
+      prefill: {
         name: notes.firstName + " " + notes.lastName,
         email: notes.emailId,
-        contact: '9999999999'
+        contact: "935622590",
       },
       theme: {
-        color: '#1182f2'
+        color: "#1182f2",
       },
-    };
+    }
 
     const rzp= new window.Razorpay(options);
     rzp.open();

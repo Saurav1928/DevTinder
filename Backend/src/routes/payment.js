@@ -15,7 +15,7 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
     const { membershipType } = req?.body
     const { firstName, lastName, emailId } = req?.user
     // console.log(req?.body)
-    console.log("Payment create order called for : ", member)
+    console.log("Payment create order called for : ", membershipType)
     const order = await razorpayInstance.orders.create({
       amount: membershipAmount[membershipType] * 100,
       currency: "INR",

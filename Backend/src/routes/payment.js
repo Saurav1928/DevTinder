@@ -65,41 +65,73 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
     console.log("Webhook called..")
-    const webHookSignature = req.get("X-Razorpay-Signature");
-    console.log("Webhook sign : ", webHookSignature)
-    const isWebhookValid = validateWebhookSignature(
-      JSON.stringify(req.body),
-      webHookSignature,
-      process.env.RAZORPAY_WEBHOOK_SECRET
-    )
-    if (!isWebhookValid) {
-      console.log("Webhook sign :", webHookSignature)
-      return res.status(500).json({ msg: "Webhook signature is invalid...." })
+
+    // Headers in Express are case-insensitive and normalized to lowercase
+    const webHookSignature = req.headers["x-razorpay-signature"]
+
+    if (!webHookSignature) {
+      console.error("Missing Razorpay signature header")
+      return res.status(400).json({ msg: "Missing signature header" })
     }
 
-    // webhook sign is valid
+    console.log("Webhook body:", JSON.stringify(req.body))
+    console.log("Webhook signature:", webHookSignature)
+
+    try {
+      const isWebhookValid = validateWebhookSignature(
+        JSON.stringify(req.body),
+        webHookSignature,
+        process.env.RAZORPAY_WEBHOOK_SECRET
+      )
+
+      if (!isWebhookValid) {
+        console.error("Invalid webhook signature")
+        return res.status(400).json({ msg: "Webhook signature is invalid" })
+      }
+    } catch (validationError) {
+      console.error("Webhook validation error:", validationError)
+      return res.status(400).json({ msg: "Webhook validation failed: " + validationError.message });
+    }
+
+    // Webhook sign is valid
+    console.log("Webhook signature validated successfully");
 
     const paymentDetails = req.body.payload.payment.entity
+    console.log("Payment details:", paymentDetails);
+
     const payment = await Payment.findOne({
       orderId: paymentDetails.order_id,
     })
-    // so updated payement status in DB
+
+    if (!payment) {
+      console.error("Payment not found for order ID:", paymentDetails.order_id)
+      return res.status(404).json({ msg: "Payment record not found" })
+    }
+
+    // Update payment status in DB
     payment.status = paymentDetails.status
-    payment.randomField = "Random field"
     await payment.save()
-    // update the user as premium
+    console.log("Payment status updated:", payment.status)
+
+    // Update the user as premium
     const user = await User.findOne({ _id: payment.userId })
+    if (!user) {
+      console.error("User not found for ID:", payment.userId)
+      return res.status(404).json({ msg: "User not found" })
+    }
+
     user.isPremium = true;
     user.membershipType = payment.notes.membershipType;
     await user.save()
+    console.log("User updated to premium:", user._id);
    
-    // return success response to razorpay - if we wont return then infinte
-    return res.json({ msg: "Webhook received successfully..." })
+    // Return success response to Razorpay
+    return res.status(200).json({ msg: "Webhook processed successfully" });
   } catch (error) {
-    return res.status(500).json({ msg: error.message })
+    console.error("Webhook error:", error)
+    return res.status(500).json({ msg: error.message || "Internal server error" });
   }
 })
-
 module.exports = paymentRouter
 
 

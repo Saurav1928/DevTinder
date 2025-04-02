@@ -8,7 +8,6 @@ const {
 } = require("../utils/validation")
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
-    console.log("Prfile view api called...");
     const loggedInUser = req.user
     const { _id, firstName, lastName, about, skills, age, gender, photoUrl } =
       loggedInUser

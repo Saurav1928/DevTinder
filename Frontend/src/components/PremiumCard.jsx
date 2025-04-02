@@ -1,6 +1,4 @@
-import axios from "axios"
 import React from "react"
-import BACKEND_URL from "../utils/constant"
 
 const PremiumCard = ({
   planName,
@@ -10,38 +8,8 @@ const PremiumCard = ({
   buttonText,
   buttonStyle,
   membershipType,
+  handlePremiumBuy, // Receiving function from parent
 }) => {
-  const handlePremiumBuy = async () => {
-    const order = await axios.post(
-      BACKEND_URL + "/payment/createOrder",
-      {
-        membershipType,
-      },
-      { withCredentials: true }
-    )
-
-    const {keyId, amount, currency, notes, receipt, status, orderId} = order.data
-    const options = {
-      key: keyId, // Replace with your Razorpay key_id
-      amount: amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-      currency: currency,
-      name: "Dev Tinder",
-      description:
-        "Connect with other developers and collaborate on exciting projects.",
-      order_id: orderId, // This is the order_id created in the backend
-      prefill: {
-        name: notes.firstName + " " + notes.lastName,
-        email: notes.emailId,
-        contact: "935622590",
-      },
-      theme: {
-        color: "#1182f2",
-      },
-    }
-
-    const rzp= new window.Razorpay(options);
-    rzp.open();
-  }
   return (
     <div className="card w-full bg-base-100 shadow-2xl transition-transform hover:scale-104 p-10 hover:border-1 border-amber-700 hover:cursor-pointer">
       <div className="card-body flex">
@@ -57,7 +25,7 @@ const PremiumCard = ({
         <div className="card-actions justify-center mt-6">
           <button
             className={`btn ${buttonStyle}`}
-            onClick={() => handlePremiumBuy()}
+            onClick={() => handlePremiumBuy(membershipType)} // Passing membershipType
           >
             {buttonText}
           </button>

@@ -1,5 +1,7 @@
-import React from "react";
-import PremiumCard from "./PremiumCard";
+import React, { useEffect, useState } from "react"
+import PremiumCard from "./PremiumCard"
+import axios from "axios"
+import BACKEND_URL from "../utils/constant"
 
 const plans = [
   {
@@ -18,7 +20,8 @@ const plans = [
   {
     planName: "Pro Plan",
     membershipType: "pro",
-    description: "Best suited for active developers aiming to expand connections.",
+    description:
+      "Best suited for active developers aiming to expand connections.",
     features: [
       "Blue Tick Verification",
       "Chat with 2 people per day",
@@ -32,7 +35,8 @@ const plans = [
   {
     planName: "Ultimate Plan",
     membershipType: "ultimate",
-    description: "Designed for developers who want unlimited access and full potential.",
+    description:
+      "Designed for developers who want unlimited access and full potential.",
     features: [
       "Blue Tick Verification",
       "Chat with unlimited people",
@@ -44,21 +48,77 @@ const plans = [
     buttonText: "Get Ultimate",
     buttonStyle: "btn-secondary",
   },
-];
+]
 
 const Premium = () => {
-  return (
+  const [isUserPremium, setIsUserPremium] = useState(false)
+  useEffect(() => {
+    verifyPremium()
+  }, [])
+  const verifyPremium = async () => {
+    const res = await axios.get(BACKEND_URL + "/premium/verify", {
+      withCredentials: true,
+    })
+    // console.log("RES: ", res)
+    setIsUserPremium(res?.data?.isPremium)
+  }
+  const handlePremiumBuy = async (membershipType) => {
+    try {
+      const order = await axios.post(
+        BACKEND_URL + "/payment/createOrder",
+        { membershipType },
+        { withCredentials: true }
+      )
+
+      const { keyId, amount, currency, notes, receipt, status, orderId } =
+        order.data
+
+      const options = {
+        key: keyId,
+        amount: amount,
+        currency: currency,
+        name: "Dev Tinder",
+        description:
+          "Connect with other developers and collaborate on exciting projects.",
+        order_id: orderId,
+        prefill: {
+          name: notes.firstName + " " + notes.lastName,
+          email: notes.emailId,
+          contact: "935622590",
+        },
+        theme: {
+          color: "#1182f2",
+        },
+        handler: verifyPremium,
+      }
+
+      const rzp = new window.Razorpay(options)
+      rzp.open()
+    } catch (error) {
+      console.error("Error creating order:", error)
+    }
+  }
+
+  return isUserPremium ? (
+    <div className="mt-50 text-center font-bold text-3xl ">
+      You are already a preium user
+    </div>
+  ) : (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900">
       <h1 className="text-5xl font-bold text-center mb-12">
         Choose Your Premium Plan on DevTinder
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-7xl">
         {plans.map((plan, index) => (
-          <PremiumCard key={index} {...plan} />
+          <PremiumCard
+            key={index}
+            {...plan}
+            handlePremiumBuy={handlePremiumBuy}
+          />
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Premium;
+export default Premium

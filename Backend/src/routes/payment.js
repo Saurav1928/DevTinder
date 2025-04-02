@@ -11,53 +11,61 @@ const {
 
 paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
   try {
-    // console.log("Req Body : ", req?.body?.planName)
-    const { membershipType } = req?.body
-    const { firstName, lastName, emailId } = req?.user
-    console.log("Req:" ,req?.user)
-    // console.log("Payment create order called for : ", membershipType)
+    const { membershipType } = req.body
+    const { firstName, lastName, emailId } = req.user
+
+    if (!membershipType) {
+      return res.status(400).json({ msg: "Membership type is required" })
+    }
+
+    const orderNotes = {
+      firstName: firstName || "",
+      lastName: lastName || "",
+      emailId: emailId || "",
+      membershipType: membershipType
+    }
+
+    console.log("Creating order with notes:", orderNotes);
+
     const order = await razorpayInstance.orders.create({
       amount: membershipAmount[membershipType] * 100,
       currency: "INR",
       receipt: "receipt#1",
-      notes: {
-        firstName,
-        lastName,
-        emailId,
-        membershipType:   membershipType,
-      },
-    })
+      notes: orderNotes
+    });
 
-    // once order is created, save it in database
-    console.log("Order : ", order)
+    console.log("Order created:", order);
 
     const payment = new Payment({
       userId: req.user._id,
       orderId: order.id,
       currency: order.currency,
-      notes: order.notes,
+      notes: order.notes, // Store the notes from the order directly
       receipt: order.receipt,
       status: order.status,
       amount: order.amount,
     })
+
     const savedPayment = await payment.save()
-    // return back the order details to the frontend
+    // console.log("Payment saved:", savedPayment._id);
+    console.log("Saved payment:", payment)
     return res.json({
-      ...savedPayment.toJSON(),  keyId: process.env.RAZORPAY_KEY_ID,
-    })
+      ...savedPayment.toJSON(),
+      keyId: process.env.RAZORPAY_KEY_ID,
+    });
   } catch (error) {
-    // console.log("Error :  ", error)
+    console.error("Create order error:", error);
     return res
       .status(500)
-      .json({ msg: error?.message || "Error in creating payment..." })
+      .json({ msg: error?.message || "Error in creating payment" });
   }
-})
+});
 // here in below "/payment/webhook" there is no need of userAUth because this api is going to be hit by razorpay and not by the user
 // so no need of userAuth middleware here
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
     console.log("Webhook called..")
-    const webHookSignature = req.headers["X-Razorpay-Signature"];
+    const webHookSignature = req.get("X-Razorpay-Signature");
     console.log("Webhook sign : ", webHookSignature)
     const isWebhookValid = validateWebhookSignature(
       JSON.stringify(req.body),
@@ -77,6 +85,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     })
     // so updated payement status in DB
     payment.status = paymentDetails.status
+    payment.randomField = "Random field"
     await payment.save()
     // update the user as premium
     const user = await User.findOne({ _id: payment.userId })

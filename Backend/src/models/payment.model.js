@@ -28,7 +28,8 @@ const paymentSchema= new mongoose.Schema({
     notes:{
         firstName:{type:String},
         lastName:{type:String},
-        memebershipType:{type:String},
+        membershipType: { type: String },
+        emailId: { type: String },
     },
     status:{
         type:String, required:true

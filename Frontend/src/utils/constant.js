@@ -1,3 +1,5 @@
-const BACKEND_URL = "/api"
-// const BACKEND_URL = "http://localhost:7000"
+const BACKEND_URL = window.location.hostname === "localhost"
+    ? "http://localhost:7000"
+    : "/api"
+
 export default BACKEND_URL

@@ -57,7 +57,7 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
     console.log("Webhook called..")
-    const webHookSignature = req.get("X-Razorpay-Signature")
+    const webHookSignature = req.headers["X-Razorpay-Signature"];
     console.log("Webhook sign : ", webHookSignature)
     const isWebhookValid = validateWebhookSignature(
       JSON.stringify(req.body),
@@ -65,6 +65,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
       process.env.RAZORPAY_WEBHOOK_SECRET
     )
     if (!isWebhookValid) {
+      console.log("Webhook sign :", webHookSignature)
       return res.status(500).json({ msg: "Webhook signature is invalid...." })
     }
 
@@ -82,10 +83,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     user.isPremium = true;
     user.membershipType = payment.notes.membershipType;
     await user.save()
-    // if (req.body.event === "payment.captured") {
-    // }
-    // if (req.body.event === "payment.failed") {
-    // }
+   
     // return success response to razorpay - if we wont return then infinte
     return res.json({ msg: "Webhook received successfully..." })
   } catch (error) {
@@ -96,4 +94,4 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 module.exports = paymentRouter
 
 
-// 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
+// 

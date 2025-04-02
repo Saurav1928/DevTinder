@@ -8,11 +8,10 @@ import Feed from "./components/Feed"
 import ErrorPage from "./components/ErrorPage"
 import Connections from "./components/Connections"
 import RequestsReceived from "./components/RequestsReceived"
-import SingUp from "./components/SignUp"
-//
 import WelcomePage from "./components/WelcomePage"
 import SignUp from "./components/SignUp"
 import Premium from "./components/Premium"
+
 function App() {
   return (
     <Provider store={appStore}>

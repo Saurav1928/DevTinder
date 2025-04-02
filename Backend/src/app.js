@@ -30,7 +30,7 @@ connectDB()
     console.log("Connected to DB!!")
     app.listen(
       PORT,
-      console.log(`App is running at http://localhost:${PORT} !!`)
+      console.log(`App is running at http://localhost:${PORT} !!`)  
     )
   })
   .catch((err) => {

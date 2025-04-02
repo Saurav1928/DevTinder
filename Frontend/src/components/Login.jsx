@@ -33,6 +33,7 @@ const Login = () => {
       )
       dispatch(addUser(res.data))
     } catch (error) {
+      console.log("Error occuered : ", error)
       setError(error?.response?.data?.error)
     }
   }

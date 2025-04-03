@@ -24,7 +24,7 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
       membershipType: membershipType,
     };
 
-    console.log("Creating order with notes:", orderNotes);
+    // console.log("Creating order with notes:", orderNotes);
 
     const order = await razorpayInstance.orders.create({
       amount: membershipAmount[membershipType] * 100,
@@ -33,7 +33,7 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
       notes: orderNotes,
     });
 
-    console.log("Order created:", order);
+    // console.log("Order created:", order);
 
     const payment = new Payment({
       userId: req.user._id,
@@ -46,7 +46,7 @@ paymentRouter.post("/payment/createOrder", userAuth, async (req, res) => {
     });
 
     await payment.save()
-    console.log("Saved payment:", payment);
+    // console.log("Saved payment:", payment);
 
     return res.json({
       ...payment.toJSON(),
@@ -71,11 +71,11 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 
     const webHookSignature = req.headers["x-razorpay-signature"];
     if (!webHookSignature) {
-      console.error("Missing Razorpay signature header")
+      // console.error("Missing Razorpay signature header")
       return res.status(400).json({ msg: "Missing signature header" });
     }
 
-    console.log("Webhook body:", JSON.stringify(req.body))
+    // console.log("Webhook body:", JSON.stringify(req.body))
     console.log("Webhook signature:", webHookSignature);
 
     const isWebhookValid = validateWebhookSignature(
@@ -129,9 +129,9 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 
 
 paymentRouter.get("/premium/verify", userAuth, async (req, res) => {
-  console.log("REQ: ", req)
+
   const user = req?.user
-  console.log("USER : ", user)
+
   if (user?.isPremium) return res.json({ isPremium: true })
   return res.json({ isPremium: false })
 })

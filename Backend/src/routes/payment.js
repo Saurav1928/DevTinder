@@ -64,68 +64,6 @@ const validateWebhookSignature = (body, signature, secret) => {
   return expectedSignature === signature
 }
 
-// Webhook Route
-// paymentRouter.post("/payment/webhook", async (req, res) => {
-//   try {
-//     console.log("Webhook called..");
-
-//     const webHookSignature = req.headers["x-razorpay-signature"];
-//     if (!webHookSignature) {
-//       // console.error("Missing Razorpay signature header")
-//       return res.status(400).json({ msg: "Missing signature header" });
-//     }
-
-//     // console.log("Webhook body:", JSON.stringify(req.body))
-//     console.log("Webhook signature:", webHookSignature);
-
-//     const isWebhookValid = validateWebhookSignature(
-//       JSON.stringify(req.body),
-//       webHookSignature,
-//       process.env.RAZORPAY_WEBHOOK_SECRET
-//     );
-
-//     if (!isWebhookValid) {
-//       console.error("Invalid webhook signature")
-//       return res.status(400).json({ msg: "Webhook signature is invalid" });
-//     }
-
-//     console.log("Webhook signature validated successfully");
-
-//     const paymentDetails = req.body.payload.payment.entity;
-//     console.log("Payment details:", paymentDetails);
-
-//     const payment = await Payment.findOne({ orderId: paymentDetails.order_id });
-//     if (!payment) {
-//       console.error("Payment not found for order ID:", paymentDetails.order_id)
-//       return res.status(404).json({ msg: "Payment record not found" });
-//     }
-
-//     // Update payment status in DB
-//     payment.status = paymentDetails.status
-//     await payment.save()
-//     console.log("Payment status updated:", payment.status);
-
-//     const user = await User.findById(payment.userId);
-//     if (!user) {
-//       console.error("User not found for ID:", payment.userId)
-//       return res.status(404).json({ msg: "User not found" });
-//     }
-
-//     if (payment.status === "captured") {
-//       user.isPremium = true;
-//       user.membershipType = payment.notes?.membershipType || "default"
-//       await user.save()
-//       console.log("User updated to premium:", user._id);
-//     } else if (payment.status === "failed") {
-//       console.log("Payment failed. No premium access granted.")
-//     }
-
-//     return res.status(200).json({ msg: "Webhook processed successfully" });
-//   } catch (error) {
-//     console.error("Webhook error:", error);
-//     return res.status(500).json({ msg: error.message || "Internal server error" });
-//   }
-// });
 
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
@@ -220,4 +158,69 @@ paymentRouter.get("/premium/verify", userAuth, async (req, res) => {
   if (user?.isPremium) return res.json({ isPremium: true })
   return res.json({ isPremium: false })
 })
+
+
+
+// Webhook Route
+// paymentRouter.post("/payment/webhook", async (req, res) => {
+//   try {
+//     console.log("Webhook called..");
+
+//     const webHookSignature = req.headers["x-razorpay-signature"];
+//     if (!webHookSignature) {
+//       // console.error("Missing Razorpay signature header")
+//       return res.status(400).json({ msg: "Missing signature header" });
+//     }
+
+//     // console.log("Webhook body:", JSON.stringify(req.body))
+//     console.log("Webhook signature:", webHookSignature);
+
+//     const isWebhookValid = validateWebhookSignature(
+//       JSON.stringify(req.body),
+//       webHookSignature,
+//       process.env.RAZORPAY_WEBHOOK_SECRET
+//     );
+
+//     if (!isWebhookValid) {
+//       console.error("Invalid webhook signature")
+//       return res.status(400).json({ msg: "Webhook signature is invalid" });
+//     }
+
+//     console.log("Webhook signature validated successfully");
+
+//     const paymentDetails = req.body.payload.payment.entity;
+//     console.log("Payment details:", paymentDetails);
+
+//     const payment = await Payment.findOne({ orderId: paymentDetails.order_id });
+//     if (!payment) {
+//       console.error("Payment not found for order ID:", paymentDetails.order_id)
+//       return res.status(404).json({ msg: "Payment record not found" });
+//     }
+
+//     // Update payment status in DB
+//     payment.status = paymentDetails.status
+//     await payment.save()
+//     console.log("Payment status updated:", payment.status);
+
+//     const user = await User.findById(payment.userId);
+//     if (!user) {
+//       console.error("User not found for ID:", payment.userId)
+//       return res.status(404).json({ msg: "User not found" });
+//     }
+
+//     if (payment.status === "captured") {
+//       user.isPremium = true;
+//       user.membershipType = payment.notes?.membershipType || "default"
+//       await user.save()
+//       console.log("User updated to premium:", user._id);
+//     } else if (payment.status === "failed") {
+//       console.log("Payment failed. No premium access granted.")
+//     }
+
+//     return res.status(200).json({ msg: "Webhook processed successfully" });
+//   } catch (error) {
+//     console.error("Webhook error:", error);
+//     return res.status(500).json({ msg: error.message || "Internal server error" });
+//   }
+// });
 module.exports = paymentRouter

@@ -11,6 +11,7 @@ import RequestsReceived from "./components/RequestsReceived"
 import WelcomePage from "./components/WelcomePage"
 import SignUp from "./components/SignUp"
 import Premium from "./components/Premium"
+import Chat from "./components/Chat"
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/connections" element={<Connections />} />
             <Route path="/premium" element={<Premium />} />
             <Route path="/requests" element={<RequestsReceived />} />
+            <Route path="/chat/:targetUserId" element={<Chat />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
         </Routes>

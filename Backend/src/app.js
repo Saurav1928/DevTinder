@@ -2,6 +2,7 @@ const dotenv = require("dotenv")
 dotenv.config() // Make sure this is at the top before using process.env
 require("./utils/cronJob")
 const express = require("express")
+const http = require("http")
 const { connectDB } = require("./config/database")
 const app = express()
 
@@ -17,6 +18,7 @@ const profileRouter = require("./routes/profile")
 const requestRouter = require("./routes/request")
 const { userRouter } = require("./routes/user")
 const paymentRouter = require("./routes/payment")
+const initializeSocket = require("./utils/socket")
 app.use("/", authRouter)
 app.use("/", profileRouter)
 app.use("/", requestRouter)
@@ -25,12 +27,16 @@ app.use("/", paymentRouter)
 
 const PORT = process.env.PORT || 3000
 
+const server = http.createServer(app)
+initializeSocket(server)
+
+
 connectDB()
   .then(() => {
     console.log("Connected to DB!!")
-    app.listen(
+    server.listen(
       PORT,
-      console.log(`App is running at http://localhost:${PORT} !!`)  
+      console.log(`Server is listening at http://localhost:${PORT} !!`)  
     )
   })
   .catch((err) => {

@@ -17,7 +17,7 @@ const userSchema = new Schema(
     },
     emailId: {
       type: String,
-      unique: [true, "Email must be unique..."],
+      unique: [true, "User with this email already exists"],
       required: true,
       trim: true,
       lowercase: true,
@@ -37,8 +37,8 @@ const userSchema = new Schema(
     age: {
       type: Number,
       // this is also one of the validation method
-      min: [18, `Must be atleast 18`],
-      max: [110, `Must be atmax 110`],
+      min: [18, `Age Must be atleast 18`],
+      max: [110, `Age Must be atmax 110`],
     },
     gender: {
       type: String,
@@ -50,7 +50,7 @@ const userSchema = new Schema(
     photoUrl: {
       type: String,
       default:
-        "https://media.licdn.com/dms/image/v2/D5603AQHLa7XwSS7C7w/profile-displayphoto-shrink_800_800/B56ZW40rWBHoAc-/0/1742562573614?e=1748476800&v=beta&t=P6QFoW9jBEWHqXYRJCq2ApMXA8lesx9Rcg8fzBEwpNs",
+        "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?t=st=1743953982~exp=1743957582~hmac=66b68b2fbe8feb98364016022ef7e3e92e3179e300524f5b4a191f36c86d3df7&w=826",
       validate(value) {
         if (!validator.isURL(value))
           throw new Error("Photo URL is INVALID: " + value)

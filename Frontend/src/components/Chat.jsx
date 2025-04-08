@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { createSocketConnection } from "../utils/socket"
 import { useSelector } from "react-redux"
+import axios from "axios"
+import BACKEND_URL from "../utils/constant"
 
 const Chat = () => {
   const { targetUserId } = useParams()
@@ -12,9 +14,35 @@ const Chat = () => {
   //   console.log("Target User id:", targetUserId);
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState("")
+  const fetchMessages = async () => {
+    try {
+      const res = await axios.get(`${BACKEND_URL}/chat/${targetUserId}`, {
+        withCredentials: true,
+      })
+
+      const chatMessages = res?.data?.messages?.map((msg) => {
+        const { senderId, text } = msg
+        return {
+          firstName: senderId?.firstName,
+          lastName: senderId?.lastName,
+          text: text,
+          photoUrl: senderId?.photoUrl,
+        }
+      })
+      console.log("Messages: ", res.data.messages)
+      console.log("chatMessages: ", chatMessages)
+      setMessages(chatMessages)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    fetchMessages()
+  }, [])
 
   useEffect(() => {
     if (!loggedInUserId) return
+
     // as soon as page loads, the socket connection is made and join chat event is emmitted
     const socket = createSocketConnection()
     socket.emit("joinChat", {
@@ -31,11 +59,11 @@ const Chat = () => {
     //   console.log("ENd")
     // })
     socket.on("messageReceived", ({ firstName, text }) => {
-      console.log("Message received from ", firstName, " : ", text)
+      // console.log("Message received from ", firstName, " : ", text)
 
       setMessages((prevMessages) => {
         const updated = [...prevMessages, { firstName, text }]
-        console.log("Updated messages", updated)
+        // console.log("Updated messages", updated)
         setNewMessage("") // Clear the input field after sending the message
         return updated
       })
@@ -68,6 +96,7 @@ const Chat = () => {
       <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-gray-700">
         {messages.length > 0 ? (
           messages.map((msg, index) => {
+            // console.log("Msg :", msg)
             const isOwnMessage = msg.firstName === loggedInUserFirstName
             return (
               <div
@@ -78,7 +107,10 @@ const Chat = () => {
                   <div className="w-10 rounded-full">
                     <img
                       alt="User avatar"
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                      src={
+                        msg?.photoUrl ||
+                        "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                      }
                     />
                   </div>
                 </div>

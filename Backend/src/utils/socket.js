@@ -36,6 +36,8 @@ const initializeSocket = (server) => {
                 console.log("Message sent from ", firstName, " to room : ", roomId)
                 //   console.log(firstName, ":", text)
                 /// save message to database
+                // TODO: check if users are frnds or Not 
+
                 // 2 cases 
                 // 1. if chat exists then push message to chat
                 // 2. if chat does not exists then create new chat and push message to chat

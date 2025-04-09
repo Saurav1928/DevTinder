@@ -58,7 +58,7 @@ requestRouter.post(
         The DevTinder Team`,
         })
 
-        // console.log("Request sent...", resEmail)
+        console.log("Request sent...", resEmail)
       }
 
       // console.log({ toUser, fromUser })

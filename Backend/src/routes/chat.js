@@ -23,7 +23,7 @@ try {
             messages: []
         })
         await chat.save()
-        console.log("Chat created")
+        // console.log("Chat created")
     }
     res.json(chat);
 

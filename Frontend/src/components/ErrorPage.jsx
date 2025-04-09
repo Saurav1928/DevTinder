@@ -1,29 +1,18 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react"
+import { Link } from "react-router-dom"
 
 const ErrorPage = () => {
-  const navigate = useNavigate();
-
-  const handleBackToHome = () => {
-    // if route is signup then route to signup
-    navigate("/welcomePage")
-  };
-
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-base-100 text-center p-4">
-      <h1 className="text-6xl font-bold text-red-500 mb-4">401</h1>
-      <h2 className="text-2xl font-semibold text-gray-100 mb-6">You are unauthorised..</h2>
-      <p className="text-lg text-gray-400 mb-8">
-        Please login to access the app...
+    <div className="flex flex-col justify-center items-center min-h-screen bg-base-200">
+      <h1 className="text-6xl font-bold text-red-500">404</h1>
+      <p className="text-xl text-gray-700 mt-4">
+        Oops! The page you're looking for doesn't exist.
       </p>
-      <button
-        onClick={handleBackToHome}
-        className="px-6 py-3 bg-blue-600 cursor-pointer text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
-      >
-        Login Now
-      </button>
+      <Link to="/" className="mt-6">
+        <button className="btn btn-primary">Go Back Home</button>
+      </Link>
     </div>
-  );
-};
+  )
+}
 
-export default ErrorPage;
+export default ErrorPage

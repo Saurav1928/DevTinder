@@ -8,8 +8,15 @@ const userSchema = new Schema(
     firstName: {
       type: String,
       required: true,
-      minLength: [4, `Must be atleast of length 4`],
-      maxLength: [30, `Must be atmost of length 30`],
+      // minLength: [4, `Must be atleast of length 4`],
+      // maxLength: [30, `Must be atmost of length 30`],
+      validate(value) {
+        if (!validator.isAlpha(value))
+          throw new Error("First Name should only contain alphabets : " + value)
+        if (!validator.isLength(value, { min: 4, max: 20 }))
+          throw new Error("should be between 4 to 20 characters")
+      }
+
       // index: true,
     },
     lastName: {
@@ -37,8 +44,8 @@ const userSchema = new Schema(
     age: {
       type: Number,
       // this is also one of the validation method
-      min: [18, `Age Must be atleast 18`],
-      max: [110, `Age Must be atmax 110`],
+      min: [18, `Must be atleast 18`],
+      max: [110, `Must be atmax 110`],
     },
     gender: {
       type: String,

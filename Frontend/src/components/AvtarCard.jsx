@@ -3,7 +3,13 @@ import { Link } from "react-router-dom"
 
 const AvtarCard = ({ connection }) => {
   const { firstName, lastName, about, photoUrl, _id } = connection
-
+  const truncateText = (text, wordLimit) => {
+    const words = text.split(" ")
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(" ") + "..."
+    }
+    return text
+  }
   return (
     <div className="flex justify-between items-center gap-4 bg-base-200 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       {/* Avatar Image */}
@@ -31,7 +37,7 @@ const AvtarCard = ({ connection }) => {
             {firstName} {lastName}
           </h2>
           <p className="text-sm text-base-content opacity-80">
-            {about || "No description available."}
+            {truncateText(about || "No description available.", 18)}
           </p>
         </div>
       </div>

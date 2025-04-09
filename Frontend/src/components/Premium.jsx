@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react"
-import PremiumCard from "./PremiumCard"
 import axios from "axios"
 import BACKEND_URL from "../utils/constant"
 
 const plans = [
   {
-    planName: "Starter Plan",
+    planName: "Starters",
     membershipType: "starters",
     description: "For developers just starting to connect and collaborate.",
     features: [
@@ -18,7 +17,7 @@ const plans = [
     buttonStyle: "btn-outline btn-primary",
   },
   {
-    planName: "Pro Plan",
+    planName: "Pro",
     membershipType: "pro",
     description:
       "Best suited for active developers aiming to expand connections.",
@@ -26,22 +25,19 @@ const plans = [
       "Blue Tick Verification",
       "Chat with 2 people per day",
       "Send 30 collaboration requests per month",
-      "Priority Customer Support",
     ],
     price: 500,
     buttonText: "Get Pro",
     buttonStyle: "btn-outline btn-secondary",
   },
   {
-    planName: "Ultimate Plan",
+    planName: "Ultimate",
     membershipType: "ultimate",
     description:
       "Designed for developers who want unlimited access and full potential.",
     features: [
       "Blue Tick Verification",
       "Chat with unlimited people",
-      "Send unlimited collaboration requests",
-      "Exclusive invites to DevTinder Events",
       "Premium Support",
     ],
     price: 1000,
@@ -52,16 +48,22 @@ const plans = [
 
 const Premium = () => {
   const [isUserPremium, setIsUserPremium] = useState(false)
+
   useEffect(() => {
     verifyPremium()
   }, [])
+
   const verifyPremium = async () => {
-    const res = await axios.get(BACKEND_URL + "/premium/verify", {
-      withCredentials: true,
-    })
-    console.log("RES: ", res)
-    setIsUserPremium(res?.data?.isPremium)
+    try {
+      const res = await axios.get(BACKEND_URL + "/premium/verify", {
+        withCredentials: true,
+      })
+      setIsUserPremium(res?.data?.isPremium)
+    } catch (error) {
+      console.error("Error verifying premium status:", error)
+    }
   }
+
   const handlePremiumBuy = async (membershipType) => {
     try {
       const order = await axios.post(
@@ -100,21 +102,48 @@ const Premium = () => {
   }
 
   return isUserPremium ? (
-    <div className="mt-50 text-center font-bold text-3xl ">
-      You are already a preium user
+    <div className="flex flex-col items-center justify-center min-h-screen bg-base-200">
+      <div className="card bg-base-100 shadow-xl p-8 text-center">
+        <h1 className="text-4xl font-bold text-primary mb-4">
+          You are already a Premium User!
+        </h1>
+        <p className="text-lg text-base-content opacity-80">
+          Enjoy all the exclusive features and benefits of your premium plan.
+        </p>
+      </div>
     </div>
   ) : (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900">
-      <h1 className="text-5xl font-bold text-center mb-12">
-        Choose Your Premium Plan on DevTinder
+    <div className="flex flex-col items-center justify-center min-h-screen bg-base-200">
+      <h1 className="text-5xl font-bold text-primary mb-12">
+        Choose Your Premium Plan
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-7xl">
         {plans.map((plan, index) => (
-          <PremiumCard
+          <div
             key={index}
-            {...plan}
-            handlePremiumBuy={handlePremiumBuy}
-          />
+            className="card bg-base-100 shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300 flex flex-col"
+          >
+            <h2 className="text-2xl font-bold text-primary mb-4">
+              {plan.planName}
+            </h2>
+            <p className="text-base-content opacity-80 mb-4">
+              {plan.description}
+            </p>
+            <ul className="list-disc list-inside text-base-content opacity-80 mb-6">
+              {plan.features.map((feature, i) => (
+                <li key={i}>{feature}</li>
+              ))}
+            </ul>
+            <div className="flex justify-between items-center mt-auto">
+              <p className="text-2xl font-bold text-secondary">₹{plan.price}</p>
+              <button
+                className={`btn ${plan.buttonStyle}`}
+                onClick={() => handlePremiumBuy(plan.membershipType)}
+              >
+                {plan.buttonText}
+              </button>
+            </div>
+          </div>
         ))}
       </div>
     </div>

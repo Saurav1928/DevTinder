@@ -8,37 +8,41 @@ const verifyEmail = require("../utils/sesVerifyEmailIdentity")
 
 authRouter.post("/signup", async (req, res, next) => {
   try {
-    // Step 1: Validate the data
-    validateSignUpData(req)
+    validateSignUpData(req);
 
-    // Step 2: Encrypt the password
     const { firstName, lastName, emailId, password } = req.body
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Step 3: Creating a new instance and saving to DB
     const newUser = new User({
       firstName,
       lastName,
       emailId,
       password: hashedPassword,
-    })
-    await newUser.save()
-    const token = await newUser.getJWT()
+    });
 
-    // Step 4: Add a token to cookie and send the response back to the user
+    await newUser.save()
+    const token = await newUser.getJWT();
+
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
-    })
+    });
 
-    // Step 5: Check if the email is verified and send verification if needed
     const verifiedEmail = await verifyEmail.run(emailId)
 
-    res.send({ newUser, verifiedEmail })
+    res.send({
+      success: true,
+      user: {
+        _id: newUser._id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        emailId: newUser.emailId,
+      },
+      verifiedEmail,
+    });
   } catch (error) {
-    // console.log("Erorr in signup", error.message)
-    res.status(500).json({ error: error.message })
+    res.status(500).json({ success: false, error: error.message });
   }
-})
+});
 
 authRouter.post("/login", async (req, res) => {
   try {
@@ -64,6 +68,14 @@ authRouter.post("/login", async (req, res) => {
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
       })
+
+      const verifiedEmail = await verifyEmail.run(emailId)
+      // console.log("Is i am verified:", verifiedEmail)
+      if (user?.isVerified === false && verifiedEmail.status === "Verified") {
+        user.isVerified = true
+        await user.save()
+      }
+
       const data = {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -72,11 +84,12 @@ authRouter.post("/login", async (req, res) => {
         photoUrl: user.photoUrl,
         age: user.age,
         _id: user._id,
+        isVerified: user?.isVerified || false,
       }
       res.send(data)
     } else {
       console.log("Wrong Pass Credentials...")
-      throw new Error("Invalid Credentials...")
+      throw new Error("Invalid Credentials...") 
     }
   } catch (error) {
     res.status(400).json({ error: error.message })

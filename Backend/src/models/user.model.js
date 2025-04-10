@@ -81,6 +81,10 @@ const userSchema = new Schema(
       type: String,
       default: "This is default about!!",
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 )

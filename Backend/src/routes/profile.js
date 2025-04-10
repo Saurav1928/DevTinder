@@ -9,9 +9,9 @@ const {
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user
-    const { _id, firstName, lastName, about, skills, age, gender, photoUrl } =
+    const { _id, firstName, lastName, about, skills, age, gender, photoUrl, isVerified } =
       loggedInUser
-    res.send({ _id, firstName, lastName, about, skills, age, gender, photoUrl })
+    res.send({ user: { _id, firstName, lastName, about, skills, age, gender, photoUrl, isVerified } })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
@@ -23,18 +23,18 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     }
 
     const loggedInUser = req.user
-   
+
 
     Object.keys(req.body).forEach((field) => {
- 
+
       loggedInUser[field] = req.body[field]
-    }) 
+    })
     await loggedInUser.save()
-    const { _id, firstName, lastName, about, skills, age, gender, photoUrl } =
+    const { _id, firstName, lastName, about, skills, age, gender, photoUrl, isVerified } =
       loggedInUser
     res.json({
       message: "User updated successfully!",
-      data: { _id, firstName, lastName, about, skills, age, gender, photoUrl },
+      data: { _id, firstName, lastName, about, skills, age, gender, photoUrl, isVerified },
     })
   } catch (err) {
     res.status(400).json({
@@ -59,11 +59,11 @@ profileRouter.patch("/profile/forgetPassword", userAuth, async (req, res) => {
 
     loggedInUser.password = newHashedPassword
     await loggedInUser.save()
-    const { _id, firstName, lastName, about, skills, age, gender, photoUrl } =
+    const { _id, firstName, lastName, about, skills, age, gender, photoUrl, isVerified } =
       loggedInUser
     res.json({
       message: "Password Updated successfully!",
-      user: { _id, firstName, lastName, about, skills, age, gender, photoUrl },
+      user: { _id, firstName, lastName, about, skills, age, gender, photoUrl, isVerified },
     })
   } catch (error) {
     res.status(400).json({

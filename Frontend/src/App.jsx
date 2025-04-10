@@ -1,11 +1,19 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { Provider } from "react-redux"
+import ProtectedRoute from "./components/ProtectedRoute"
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom"
+import appStore from "./utils/appStore"
 import Body from "./components/Body"
 import Login from "./components/Login"
 import Profile from "./components/Profile"
-import { Provider } from "react-redux"
-import appStore from "./utils/appStore"
+
 import Feed from "./components/Feed"
-import ErrorPage from "./components/ErrorPage"
+
 import Connections from "./components/Connections"
 import RequestsReceived from "./components/RequestsReceived"
 import WelcomePage from "./components/WelcomePage"
@@ -13,7 +21,6 @@ import SignUp from "./components/SignUp"
 import Premium from "./components/Premium"
 import Chat from "./components/Chat"
 import UserNotVerified from "./components/UserNotVerified"
-
 function App() {
   return (
     <Provider store={appStore}>
@@ -21,16 +28,59 @@ function App() {
         <Routes>
           <Route path="/" element={<Body />}>
             <Route path="/welcomePage" element={<WelcomePage />} />
-            <Route path="/" element={<Feed />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/error" element={<ErrorPage />} />
-            <Route path="/connections" element={<Connections />} />
-            <Route path="/premium" element={<Premium />} />
-            <Route path="/requests" element={<RequestsReceived />} />
-            <Route path="/chat/:targetUserId" element={<Chat />} />
             <Route path="/notverified" element={<UserNotVerified />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Feed />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/connections"
+              element={
+                <ProtectedRoute>
+                  <Connections />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/premium"
+              element={
+                <ProtectedRoute>
+                  <Premium />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/requests"
+              element={
+                <ProtectedRoute>
+                  <RequestsReceived />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chat/:targetUserId"
+              element={
+                <ProtectedRoute>
+                  <Chat />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
         </Routes>

@@ -2,6 +2,7 @@ const express = require("express")
 const profileRouter = express.Router()
 const { userAuth } = require("../middlewares/auth")
 const bcrypt = require("bcrypt")
+const verifyEmail = require("../utils/sesVerifyEmailIdentity")
 const {
   validateEditData,
   validateForgetPasswordData,
@@ -9,6 +10,13 @@ const {
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user
+    if (loggedInUser.isVerified === false) {
+      const verifiedEmail = await verifyEmail.run(loggedInUser.emailId)
+      if (verifiedEmail.status === "Verified") {
+        loggedInUser.isVerified = true
+        await loggedInUser.save()
+      }
+    }
     const { _id, firstName, lastName, about, skills, age, gender, photoUrl, isVerified } =
       loggedInUser
     res.send({ user: { _id, firstName, lastName, about, skills, age, gender, photoUrl, isVerified } })
@@ -21,10 +29,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     if (!validateEditData(req)) {
       throw new Error("Invalid Edit Data...")
     }
-
     const loggedInUser = req.user
-
-
     Object.keys(req.body).forEach((field) => {
 
       loggedInUser[field] = req.body[field]

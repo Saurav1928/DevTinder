@@ -12,6 +12,7 @@ import WelcomePage from "./components/WelcomePage"
 import SignUp from "./components/SignUp"
 import Premium from "./components/Premium"
 import Chat from "./components/Chat"
+import UserNotVerified from "./components/UserNotVerified"
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/premium" element={<Premium />} />
             <Route path="/requests" element={<RequestsReceived />} />
             <Route path="/chat/:targetUserId" element={<Chat />} />
+            <Route path="/notverified" element={<UserNotVerified />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
         </Routes>

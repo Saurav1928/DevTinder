@@ -13,15 +13,15 @@ authRouter.post("/signup", async (req, res, next) => {
     const { firstName, lastName, emailId, password } = req.body
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({
+    const user = new User({
       firstName,
       lastName,
       emailId,
       password: hashedPassword,
     });
 
-    await newUser.save()
-    const token = await newUser.getJWT();
+    await user.save()
+    const token = await user.getJWT();
 
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
@@ -32,12 +32,16 @@ authRouter.post("/signup", async (req, res, next) => {
     res.send({
       success: true,
       user: {
-        _id: newUser._id,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        emailId: newUser.emailId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        about: user.about,
+        gender: user.gender,
+        photoUrl: user.photoUrl,
+        age: user.age,
+        _id: user._id,
+        isVerified: verifiedEmail.status === "Verified" || false,
       },
-      verifiedEmail,
+
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

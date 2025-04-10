@@ -28,16 +28,18 @@ const Feed = () => {
       dispatch(addFeed(res.data))
       setIsLoading(false)
     } catch (error) {
-      console.log("Error: ", error)
+      console.error("Error fetching feed:", error)
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    if (user) {
+    if (user?.isVerified) {
       getFeed()
+    } else if (user && !user.isVerified) {
+      navigate("/notverified")
     }
-  }, [user])
+  }, [user, navigate])
 
   useEffect(() => {
     if (!user) {

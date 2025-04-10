@@ -24,8 +24,9 @@ const SignUp = () => {
           { withCredentials: true }
         )
         setError("")
-        dispatch(addUser(res?.data?.user))
-        navigate("/")
+        const user = res?.data?.user
+        dispatch(addUser(user))
+        navigate("/notverified")
       } else {
         setError("Please fill in all fields.")
       }
@@ -35,8 +36,11 @@ const SignUp = () => {
   }
 
   useEffect(() => {
-    if (user) {
+    if (user && user?.isVerified) {
       navigate("/")
+    }
+    if (user && !user?.isVerified) {
+      navigate("/notverified")
     }
   }, [user, navigate])
 

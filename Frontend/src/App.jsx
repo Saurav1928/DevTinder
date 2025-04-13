@@ -21,6 +21,8 @@ import SignUp from "./components/SignUp"
 import Premium from "./components/Premium"
 import Chat from "./components/Chat"
 import UserNotVerified from "./components/UserNotVerified"
+import PrivacyPolicy from "./components/PrivacyPolicy"
+import ContactUs from "./components/ContactUs"
 function App() {
   return (
     <Provider store={appStore}>
@@ -82,6 +84,8 @@ function App() {
               }
             />
             <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/contact" element={<ContactUs />} />
           </Route>
         </Routes>
       </BrowserRouter>

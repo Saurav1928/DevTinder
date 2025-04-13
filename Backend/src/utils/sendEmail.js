@@ -41,8 +41,8 @@ const createSendEmailCommand = ({ toEmail, fromEmail, body, subject }) => {
 
 const run = async ({ toEmail, fromEmail, body, subject }) => {
   const sendEmailCommand = createSendEmailCommand({
-    toEmail,
-    fromEmail,
+    toEmail: toEmail,
+    fromEmail: "noreply@devmatcher.online",
     body,
     subject,
   })

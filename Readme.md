@@ -1,225 +1,258 @@
 # DevTinder
 
-DevTinder is a platform designed to connect developers for collaboration and networking. Users can create profiles, send/receive connection requests, and upgrade to premium plans for additional features.
+DevTinder is a full-stack platform designed to connect developers for collaboration, networking, and innovation. Users can create profiles, send/receive connection requests, chat in real-time, and upgrade to premium plans for additional features. The platform is built with a modern tech stack and focuses on providing a seamless user experience.
 
 ---
 
-## Table of Contents
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Folder Structure](#folder-structure)
-- [Setup Instructions](#setup-instructions)
-- [Frontend Documentation](#frontend-documentation)
-- [Backend Documentation](#backend-documentation)
-- [Environment Variables](#environment-variables)
-- [Future Enhancements](#future-enhancements)
+## 📑 Table of Contents
+
+- [Project Overview](#project-overview)  
+- [Features](#features)  
+- [Technologies Used](#technologies-used)  
+- [Folder Structure](#folder-structure)  
+- [Setup Instructions](#setup-instructions)  
+- [Frontend Documentation](#frontend-documentation)  
+- [Backend Documentation](#backend-documentation)  
+- [Environment Variables](#environment-variables)  
+- [Future Enhancements](#future-enhancements)  
+- [Contributing](#contributing)
 
 ---
 
-## Project Overview
-DevTinder is a full-stack application that connects developers worldwide. It includes features like user authentication, profile management, connection requests, and premium membership plans with Razorpay integration.
+## 🚀 Project Overview
+
+DevTinder is a platform where developers can connect, collaborate, and grow their professional network. It combines the best of social networking and professional collaboration tools, enabling developers to find like-minded individuals for projects, mentorship, and more.
 
 ---
 
-## Features
-- **User Authentication**: Signup, login, and logout functionality.
-- **Profile Management**: Edit and view user profiles.
-- **Connection Requests**: Send, accept, or reject connection requests.
-- **Premium Membership**: Upgrade to premium plans with Razorpay integration.
-- **Email Notifications**: AWS SES integration for email notifications.
-- **Cron Jobs**: Automated reminders for pending connection requests.
+## ✨ Features
+
+### Core Features
+
+- **User Authentication:** Secure signup, login, and logout with JWT.
+- **Profile Management:** Edit and view user profiles with full details.
+- **Connection Requests:** Send, accept, or reject requests.
+- **Real-Time Chat:** WebSocket-based messaging for instant communication.
+- **Premium Membership:** Razorpay-powered payment system for premium plans.
+- **Email Notifications:** AWS SES integration for sending emails.
+- **Cron Jobs:** Automated reminders for pending requests.
+
+### New Enhancements
+
+- **WebSocket Chat:** Real-time messaging with profile previews.
+- **Responsive UI:** Enhanced with TailwindCSS + DaisyUI.
+- **Photo Previews in Chat:** Sender’s photo appears in chat messages.
 
 ---
 
-## Technologies Used
+## 🛠️ Technologies Used
 
 ### Frontend
-- React (with Vite)
-- Redux Toolkit (State Management)
-- TailwindCSS (Styling)
-- DaisyUI (UI Components)
-- Axios (HTTP Requests)
+
+- React (Vite)
+- Redux Toolkit
+- TailwindCSS
+- DaisyUI
+- Axios
+- React Router
 
 ### Backend
-- Node.js (Runtime)
-- Express.js (Web Framework)
-- MongoDB (Database)
-- Razorpay (Payment Gateway)
-- AWS SES (Email Service)
-- JWT (Authentication)
-- Node-Cron (Scheduled Jobs)
+
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT for authentication
+- Razorpay for payments
+- AWS SES for emails
+- WebSocket (socket.io)
+- Node-Cron
 
 ---
 
-## Folder Structure
+## 📁 Folder Structure
 
-### Frontend
-```
+```bash
 Frontend/
 ├── src/
-│   ├── components/       # React components
-│   ├── utils/            # Redux slices and constants
-│   ├── App.jsx           # Main App component
-│   ├── main.jsx          # Entry point
-│   └── index.css         # Global styles
-├── public/               # Static assets
-├── vite.config.js        # Vite configuration
-└── package.json          # Dependencies and scripts
-```
+│   ├── components/        # React UI components
+│   ├── utils/             # Redux slices and constants
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── public/
+├── vite.config.js
+└── package.json
 
-### Backend
-```
 Backend/
 ├── src/
-│   ├── app.js            # Main server file
-│   ├── config/           # Database configuration
-│   ├── middlewares/      # Authentication middleware
-│   ├── models/           # Mongoose models
-│   ├── routes/           # API routes
-│   ├── utils/            # Utility functions (e.g., Razorpay, SES)
-├── .env                  # Environment variables
-├── package.json          # Dependencies and scripts
-└── .gitignore            # Ignored files
+│   ├── app.js             # Main Express app
+│   ├── config/            # MongoDB and Razorpay config
+│   ├── middlewares/       # JWT middleware
+│   ├── models/            # Mongoose models (User, Chat, etc.)
+│   ├── routes/            # API routes
+│   ├── sockets/           # WebSocket handlers
+│   └── utils/             # Razorpay, SES utilities
+├── .env
+├── package.json
+└── .gitignore
 ```
 
 ---
 
-## Setup Instructions
+## ⚙️ Setup Instructions
 
 ### Prerequisites
-- Node.js (v16+)
+
+- Node.js v16+
 - MongoDB
 - Razorpay Account
 - AWS SES Setup
 
 ### Steps
-1. **Clone the Repository:**
+
+1. Clone the Repository:
+
 ```bash
 git clone <repository-url>
 cd DevTinder
 ```
 
-2. **Install Frontend Dependencies:**
+2. Install Frontend Dependencies:
+
 ```bash
 cd Frontend
 npm install
 ```
 
-3. **Install Backend Dependencies:**
+3. Install Backend Dependencies:
+
 ```bash
 cd ../Backend
 npm install
 ```
 
-4. **Configure Environment Variables:**
-Create a `.env` file in the `Backend/` directory and add the required variables (see [Environment Variables](#environment-variables)).
+4. Configure Environment Variables:
 
-5. **Start the Backend Server:**
+Create a `.env` file in the `Backend/` directory (see [Environment Variables](#environment-variables)).
+
+5. Start the Backend Server:
+
 ```bash
 npm run dev
 ```
 
-6. **Start the Frontend Server:**
+6. Start the Frontend Server:
+
 ```bash
 cd ../Frontend
 npm run dev
 ```
 
-7. **Access the App:**
-Navigate to [http://localhost:5173](http://localhost:5173)
+7. Access the App:
+
+Visit [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## Frontend Documentation
+## 🌐 Frontend Documentation
 
-### Key Features
-- **State Management:** Redux Toolkit for managing user, feed, and connection state.
-  - `userSlice`: Manages user authentication state.
-  - `feedSlice`: Handles the user feed.
-  - `connectionSlice`: Manages user connections.
-  - `requestsReceivedSlice`: Handles received connection requests.
+### State Management (Redux Slices)
 
-- **Routing:** React Router for navigating between pages (Feed, Profile, Premium, etc).
-
-- **Styling:** TailwindCSS + DaisyUI for a responsive, modern UI.
+- `userSlice`: Auth state
+- `feedSlice`: Suggested users
+- `connectionSlice`: Active connections
+- `requestsReceivedSlice`: Incoming requests
 
 ### Components
-- `NavBar.jsx`: Navigation bar with links to different pages.
-- `UserCard.jsx`: Displays user info and request options.
-- `Premium.jsx`: Premium plans with Razorpay integration.
-- `EditProfile.jsx`: Allows editing user profile.
-- `RequestsReceived.jsx`: Displays connection requests received.
 
-### API Integration
-Using Axios for HTTP requests.
-Example:
+- `NavBar.jsx`: Navigation bar
+- `UserCard.jsx`: Shows user info and request buttons
+- `Premium.jsx`: Razorpay plans
+- `EditProfile.jsx`: Profile editing form
+- `RequestsReceived.jsx`: Incoming request panel
+- `Chat.jsx`: Real-time chat interface
+
+### API Example (Axios)
+
 ```js
-const res = await axios.get(BACKEND_URL + "/user/feed", { withCredentials: true });
+const res = await axios.get(`${BACKEND_URL}/user/feed`, {
+  withCredentials: true
+});
 ```
 
 ---
 
-## Backend Documentation
+## 🧩 Backend Documentation
 
 ### Key Features
-- **Authentication:** JWT-based authentication using cookies. Middleware `userAuth` protects routes.
-- **Database:** MongoDB with Mongoose models.
-  - `User`: Stores user details.
-  - `ConnectionRequest`: Manages requests.
-  - `Payment`: Tracks premium memberships.
-- **Payments:** Razorpay integration for handling payments.
-- **Webhooks:** Razorpay webhook for payment event handling.
-- **Email Notifications:** AWS SES for sending email notifications.
-- **Cron Jobs:** Daily reminders for pending requests using `node-cron`.
 
-### API Endpoints
-#### Authentication
-- `POST /signup`: User signup
-- `POST /login`: User login
-- `POST /logout`: User logout
+- **JWT Auth:** Middleware `userAuth` protects routes
+- **MongoDB Models:**
+  - `User`: User profile info
+  - `ConnectionRequest`: Sent/received requests
+  - `Chat`: Message history
+- **Real-Time Chat:** Via socket.io, stores messages in MongoDB
+- **Payments:** Razorpay integration + webhook
+- **Emails:** AWS SES integration
 
-#### Profile
-- `GET /profile/view`: View profile
-- `PATCH /profile/edit`: Edit profile
-- `PATCH /profile/forgetPassword`: Update password
+### Chat WebSocket Event
 
-#### Connections
-- `GET /user/feed`: Get user feed
-- `GET /user/requests/received`: Get received requests
-- `GET /user/connections`: Get accepted connections
-- `POST /request/send/:status/:toUserId`: Send request
-- `POST /request/review/:status/:requestId`: Review request
+```js
+socket.on("sendMessage", async ({ firstName, loggedInUserId, targetUserId, text }) => {
+  const sender = await User.findById(loggedInUserId).select("firstName photoUrl");
+  const message = { senderId: loggedInUserId, text };
 
-#### Payments
-- `POST /payment/createOrder`: Create Razorpay order
-- `POST /payment/webhook`: Razorpay webhook
-- `GET /premium/verify`: Verify premium status
+  const chat = await Chat.findOneAndUpdate(
+    { participants: { $all: [loggedInUserId, targetUserId] } },
+    { $push: { messages: message } },
+    { new: true }
+  );
+
+  io.to(targetUserId).emit("messageReceived", {
+    firstName: sender.firstName,
+    text,
+    photoUrl: sender.photoUrl,
+  });
+});
+```
+
+### Chat API Endpoint
+
+```http
+GET /chat/:targetUserId
+```
+
+Returns the chat history and target user's info (first name, last name).
 
 ---
 
-## Environment Variables
-Create a `.env` file in `Backend/` directory with:
+## 🔐 Environment Variables
+
+Create a `.env` file inside the `Backend/` directory:
+
 ```env
 PORT=7000
-MONGO_URI=<your-mongodb-uri>
-MY_SECRET=<your-jwt-secret>
-AWS_ACCESS_KEY_ID=<your-aws-access-key>
-AWS_SECRET_ACCESS_KEY=<your-aws-secret-key>
-RAZORPAY_KEY_ID=<your-razorpay-key-id>
-RAZORPAY_KEY_SECRET=<your-razorpay-key-secret>
-RAZORPAY_WEBHOOK_SECRET=<your-razorpay-webhook-secret>
+MONGO_URI=your_mongodb_uri
+MY_SECRET=your_jwt_secret
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+RAZORPAY_WEBHOOK_SECRET=your_razorpay_webhook_secret
 ```
 
 ---
 
-## Future Enhancements
-- **Real-Time Chat:** Add WebSocket-based chat.
-- **Advanced Search:** Filter and sort developer connections.
-- **Analytics:** Dashboard and usage stats for premium users.
-- **Localization:** Multi-language support.
-- **Batch Emailing:** Optimize bulk email notifications for large user bases.
+## 🚧 Future Enhancements
+
+- 🔍 **Advanced Search:** Filter by skills, interests, and location.
+- 📊 **Analytics Dashboard:** For premium users.
+- 🌎 **Localization:** Add multi-language support.
+- 📧 **Batch Emailing:** Optimize large-scale emails.
+- 🎥 **Video Calls:** Enable video calling for premium members.
 
 ---
 
-Feel free to contribute and raise issues or PRs. Happy coding! 🚀
+## 🤝 Contributing
+
+Feel free to fork the repo, raise issues, or submit pull requests. Let’s build the ultimate developer network together! 🚀
